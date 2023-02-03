@@ -13,7 +13,7 @@ var controller = require('../components/controller');
 
 async function getData() {
   return new Promise((resolve, reject) => {
-    database.query(`select * from user`, function (err, rs) {
+    database.query(`select * from nguoidung`, function (err, rs) {
       if (err) reject(err);
       resolve(rs);
     });
@@ -24,10 +24,10 @@ router.get('/', async (req, res) => {
   try {
     const results = await getData();
     console.log('The solution is: ', results);
-    res.render('index', { title: results[1].name, data: results });
+    res.render('index', { title: results[0].tennguoidung, data: results });
   } catch (err) {
     console.error(err);
-    res.render('index', { title: results[1].name, data: [] });
+    res.render('index', { title: results[0].tennguoidung, data: [] });
   }
 });
 
