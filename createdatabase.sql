@@ -206,15 +206,15 @@ INSERT INTO ct_theloai (idtruyen, idtheloai) VALUES
 
 INSERT INTO chuong (tenchuong, sochuong, ngaycapnhat, idtruyen) 
 VALUES 
-('Chapter 1: Cô gái tên Nanase', 1, '2022-01-01 12:00:00', 1)
-,('Chapter 2: Nô lệ của công ty mất nhà', 2, '2022-12-02 12:00:00', 1)
-,('Chapter 3: Em yêu anh vì XX', 3, '2022-12-03 12:00:00', 1)
+('Chapter 1: Cô gái tên Nanase', 1, '2023-05-01 12:00:00', 5)
+,('Chapter 2: Nô lệ của công ty mất nhà', 2, '2023-02-04 12:00:00', 4)
+,('Chapter 3: Em yêu anh vì XX', 3, '2022-12-03 12:00:00', 8)
 ,('Chapter 4: Hình phạt của Nanase', 4, '2022-12-04 12:00:00', 1)
-,('Chapter 5: Cuộc viếng thăm bất ngờ của cô em gái', 5, '2022-12-05 12:00:00', 1)
-,('Chapter 1', 1, '2022-12-05 12:00:00', 2)
-,('Chapter 1', 1, '2022-12-15 12:00:00', 3)
-,('Chapter 1', 1, '2022-12-08 12:00:00', 4)
-,('Chapter 1', 1, '2022-12-25 12:00:00', 5)
+,('Chapter 5: Cuộc viếng thăm bất ngờ của cô em gái', 5, '2022-12-05 12:00:00', 9)
+,('Chapter 1', 1, '2022-12-05 12:00:00', 10)
+,('Chapter 1', 1, '2022-12-15 12:00:00', 11)
+,('Chapter 1', 1, '2022-12-08 12:00:00', 12)
+,('Chapter 1', 1, '2022-12-25 12:00:00', 14)
 ;
 
 INSERT INTO image_chuong (imagelink, idchuong) 

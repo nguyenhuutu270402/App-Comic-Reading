@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         width: '100%',
         position: 'relative',
         height: 60,
-        marginTop: 16,
+        marginTop: 6,
     },
     container: {
         backgroundColor: 'white',
