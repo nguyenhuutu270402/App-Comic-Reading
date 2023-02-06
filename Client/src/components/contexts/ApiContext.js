@@ -1,5 +1,10 @@
 import React, { useContext, createContext, useState } from 'react';
-import { getTop10Truyen, get3Chuong, getAllTruyen } from '../services/ApiService';
+import {
+    getTop10Truyen, get3Chuong, getAllTruyen, getListChuongByIdTruyen,
+    getOneTruyenById, getListTheLoaiByIdTruyen, getListTacGiaByIdTruyen,
+    addTheoDoi, kiemTraTheoDoi, deleteTheoDoi, addDanhGia, kiemTraDanhGia,
+    updateDanhGia
+} from '../services/ApiService';
 
 export const ApiContext = createContext();
 export const ApiContextProvider = (props) => {
@@ -33,13 +38,103 @@ export const ApiContextProvider = (props) => {
         }
     }
 
+    const onGetListChuongByIdTruyen = async (id) => {
+        try {
+            const res = await getListChuongByIdTruyen(id);
+            return res;
+        } catch (error) {
+            console.log('onGetListChuongByIdTruyen error: ', error);
+        }
+    }
 
+    const onGetOneTruyenById = async (id) => {
+        try {
+            const res = await getOneTruyenById(id);
+            return res;
+        } catch (error) {
+            console.log('onGetOneTruyenById error: ', error);
+        }
+    }
 
+    const onGetListTheLoaiByIdTruyen = async (id) => {
+        try {
+            const res = await getListTheLoaiByIdTruyen(id);
+            return res;
+        } catch (error) {
+            console.log('onGetListTheLoaiByIdTruyen error: ', error);
+        }
+    }
+
+    const onGetListTacGiaByIdTruyen = async (id) => {
+        try {
+            const res = await getListTacGiaByIdTruyen(id);
+            return res;
+        } catch (error) {
+            console.log('onGetListTacGiaByIdTruyen error: ', error);
+        }
+    }
+
+    const onAddTheoDoi = async (idnguoidung, idtruyen) => {
+        try {
+            const res = await addTheoDoi(idnguoidung, idtruyen);
+            return res;
+        } catch (error) {
+            console.log('onAddTheoDoi error: ', error);
+        }
+    }
+
+    const onKiemTraTheoDoi = async (idnguoidung, idtruyen) => {
+        try {
+            const res = await kiemTraTheoDoi(idnguoidung, idtruyen);
+            return res;
+        } catch (error) {
+            console.log('onKiemTraTheoDoi error: ', error);
+        }
+    }
+
+    const onDeleteTheoDoi = async (idnguoidung, idtruyen) => {
+        try {
+            const res = await deleteTheoDoi(idnguoidung, idtruyen);
+            return res;
+        } catch (error) {
+            console.log('onDeleteTheoDoi error: ', error);
+        }
+    }
+
+    const onAddDanhGia = async (idnguoidung, idtruyen, sosao) => {
+        try {
+            const res = await addDanhGia(idnguoidung, idtruyen, sosao);
+            return res;
+        } catch (error) {
+            console.log('onAddDanhGia error: ', error);
+        }
+    }
+
+    const onKiemTraDanhGia = async (idnguoidung, idtruyen) => {
+        try {
+            const res = await kiemTraDanhGia(idnguoidung, idtruyen);
+            return res;
+        } catch (error) {
+            console.log('onKiemTraDanhGia error: ', error);
+        }
+    }
+
+    const onUpdateDanhGia = async (idnguoidung, idtruyen, sosao) => {
+        try {
+            const res = await updateDanhGia(idnguoidung, idtruyen, sosao);
+            return res;
+        } catch (error) {
+            console.log('onUpdateDanhGia error: ', error);
+        }
+    }
 
     return (
         <ApiContext.Provider
             value={{
-                onGetTop10Truyen, onGet3Chuong, onGetAllTruyen
+                onGetTop10Truyen, onGet3Chuong, onGetAllTruyen, onGetListChuongByIdTruyen,
+                onGetOneTruyenById, onGetListTheLoaiByIdTruyen, onGetListTacGiaByIdTruyen,
+                onAddTheoDoi, onKiemTraTheoDoi, onDeleteTheoDoi, onAddDanhGia, onKiemTraDanhGia,
+                onUpdateDanhGia
             }}
         >
             {children}

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, FlatList, TextInput, Animated, ScrollView, SectionList } from 'react-native'
+import { StyleSheet, Text, View, Image, Pressable, FlatList } from 'react-native';
 import { ApiContext } from '../contexts/ApiContext';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -21,9 +21,9 @@ const TrangChuScreen = (props) => {
         fetchData();
     }, []);
 
-    const onFormatDate = (createAt) => {
+    const onFormatDate = (date) => {
         var dateCurent = new Date();
-        var d = new Date(createAt);
+        var d = new Date(date);
         var timeFormat = new Date(dateCurent - d);
         if (d && timeFormat < 3600000 && timeFormat > 0) {
             var minute = (timeFormat / 60000).toFixed(0);
@@ -40,13 +40,30 @@ const TrangChuScreen = (props) => {
             var date = d.getDate();
             var month = d.getMonth() + 1;
             var year = d.getFullYear();
-            var hours = d.getHours();
-            const dateString = date + '/' + month + '/' + year;
+            const dateString = date.toString().padStart(2, "0") + '/' + month.toString().padStart(2, "0") + '/' + year;
             return dateString;
         }
     }
+
+    const renderHeader = () => {
+        return (
+            <View>
+                <Text style={styles.textTruyenDeCu}>Truyện đề cử</Text>
+                <FlatList style={styles.flatTop}
+                    data={top10Truyen}
+                    renderItem={renderItemTop10Truyen}
+                    keyExtractor={(item) => item.id}
+                    horizontal={true}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                />
+                <Text style={styles.textTruyenDeCu}>Truyện mới cập nhật</Text>
+            </View>
+        )
+    }
+
     const renderItemTop10Truyen = ({ item }) => {
-        const { id, tentruyen, imagelink, chuongmoinhat, ngaycapnhat, tongtheodoi } = item;
+        const { id, tentruyen, imagelink, chuongmoinhat, ngaycapnhat } = item;
         return (
             <Pressable onPress={() => navigation.navigate('ChiTietScreen', { id: id })} style={styles.containerItem}>
                 <Image style={styles.imageTop10} source={{ uri: imagelink }}></Image>
@@ -64,6 +81,24 @@ const TrangChuScreen = (props) => {
         )
     }
 
+    const renderItemAllTruyen = ({ item }) => (
+
+        <Pressable key={item.id} onPress={() => navigation.navigate('ChiTietScreen', { id: item.id })} style={styles.containerItemTruyen}>
+            <View>
+                <Image style={styles.imageTruyen} source={{ uri: item.imagelink }}></Image>
+                <View style={styles.boxDateTruyen}>
+                    <Text style={styles.textDateTruyen}>{onFormatDate(item.ngaycapnhat)}</Text>
+                </View>
+            </View>
+            <View style={styles.boxNameTruyen}>
+                <Text numberOfLines={2} style={styles.textNameTruyen}>{item.tentruyen}</Text>
+                <View style={styles.boxChapterTruyen}>
+                    <Text style={styles.textChapterTruyen}>Chapter {item.chuongmoinhat}</Text>
+                </View>
+            </View>
+        </Pressable>
+    );
+
     return (
 
 
@@ -76,45 +111,15 @@ const TrangChuScreen = (props) => {
                 </Pressable>
             </View>
             <View style={styles.boxHeaderShadow}></View>
-
-            <ScrollView>
-                {/* box top 10 truyen */}
-                <View>
-                    <Text style={styles.textTruyenDeCu}>Truyện đề cử</Text>
-                    <FlatList style={styles.flatTop}
-                        data={top10Truyen}
-                        renderItem={renderItemTop10Truyen}
-                        keyExtractor={(item) => item.id}
-                        horizontal={true}
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                    />
-                </View>
-                <View>
-
-                </View>
-                <Text style={styles.textTruyenDeCu}>Truyện mới cập nhật</Text>
-                <View style={styles.BoxTruyen}>
-                    {allTruyen.map(item => (
-                        <Pressable key={item.id} onPress={() => navigation.navigate('ChiTietScreen', { id: item.id })} style={styles.containerItemTruyen}>
-                            <View>
-                                <Image style={styles.imageTruyen} source={{ uri: item.imagelink }}></Image>
-                                <View style={styles.boxDateTruyen}>
-                                    <Text style={styles.textDateTruyen}>{onFormatDate(item.ngaycapnhat)}</Text>
-                                </View>
-                            </View>
-                            <View style={styles.boxNameTruyen}>
-                                <Text numberOfLines={2} style={styles.textNameTruyen}>{item.tentruyen}</Text>
-                                <View style={styles.boxChapterTruyen}>
-                                    <Text style={styles.textChapterTruyen}>Chapter {item.chuongmoinhat}</Text>
-                                </View>
-                            </View>
-                        </Pressable>
-                    ))}
-                </View>
-
-            </ScrollView>
-
+            <FlatList style={styles.flatAllTruyen}
+                data={allTruyen}
+                renderItem={renderItemAllTruyen}
+                ListHeaderComponent={renderHeader}
+                keyExtractor={(item) => item.id}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                numColumns={3}
+            />
         </View>
 
 
@@ -168,19 +173,14 @@ const styles = StyleSheet.create({
     },
     imageTruyen: {
         width: '100%',
+        // height: '100%',
         height: 200,
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5,
     },
     containerItemTruyen: {
-        width: '32.2%',
+        width: '32.4%',
         marginHorizontal: 2,
-    },
-    BoxTruyen: {
-        width: '100%',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        // backgroundColor: 'red',
     },
     textDateTop10: {
         color: '#DBDED5',
@@ -226,8 +226,9 @@ const styles = StyleSheet.create({
         position: 'relative',
         marginHorizontal: 2,
     },
-    flatTop: {
-        width: '100%'
+    flatAllTruyen: {
+        width: '100%',
+        height: '100%',
     },
     textTruyenDeCu: {
         color: 'tomato',
@@ -238,13 +239,10 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     boxHeaderShadow: {
-        elevation: 2,
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 100 },
-        shadowOpacity: 2,
-        shadowRadius: 10,
-        backgroundColor: 'white',
-        padding: 1,
+        height: 1,
+        backgroundColor: 'grey',
+        width: '100%',
+        opacity: 0.2
     },
     boxIconSearch: {
         position: 'absolute',

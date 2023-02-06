@@ -13,9 +13,29 @@ router.get('/get-all-truyen', apiController.getAllTruyen);
 
 router.get('/get-top10-truyen', apiController.getTop10Truyen);
 
+router.get('/get-one-truyen-by-id/:id', apiController.getOneTruyenById);
+
 router.get('/search-truyen', apiController.searchTruyen); // /search-truyen?search=naa
 
 router.get('/get-3chuong-theo-id-truyen/:idTruyen', apiController.get3Chuong);
+
+router.get('/get-list-chuong-theo-id-truyen/:idTruyen', apiController.getListChuongByIdTruyen);
+
+router.get('/get-list-the-loai-theo-id-truyen/:idTruyen', apiController.getListTheLoaiByIdTruyen);
+
+router.get('/get-list-tac-gia-theo-id-truyen/:idTruyen', apiController.getListTacGiaByIdTruyen);
+
+router.post('/add-theo-doi', apiController.addTheoDoi);
+
+router.post('/kiem-tra-theo-doi', apiController.kiemTraTheoDoi);
+
+router.post('/delete-theo-doi', apiController.deleteTheoDoi);
+
+router.post('/add-danh-gia', apiController.addDanhGia);
+
+router.post('/kiem-tra-danh-gia', apiController.kiemTraDanhGia);
+
+router.post('/update-danh-gia', apiController.updateDanhGia);
 
 
 module.exports = router;
