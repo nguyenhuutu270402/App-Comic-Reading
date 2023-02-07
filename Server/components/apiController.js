@@ -126,7 +126,7 @@ const apiController = {
     getListChuongByIdTruyen: async (req, res) => {
         try {
             var id = req.params.idTruyen;
-            var qr = `SELECT * FROM chuong WHERE idtruyen = ${id} ORDER BY chuong.sochuong desc`
+            var qr = `SELECT chuong.*, COUNT(DISTINCT luotxem.id) AS tongsoluot FROM chuong left JOIN luotxem ON chuong.id = luotxem.idchuong WHERE idtruyen = ${id} GROUP BY chuong.id ORDER BY chuong.sochuong desc`
             database.query(qr, (err, results) => {
                 if (err) {
                     res.status(500).json({ message: err.message });
@@ -258,6 +258,22 @@ const apiController = {
                     res.status(500).json({ message: err.message });
                 } else {
                     res.status(200).json({ results: true });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    getListImageChuongByIdChuong: async (req, res) => {
+        try {
+            var id = req.params.idChuong;
+            var qr = `select * from image_chuong where idchuong = ${id}`;
+            database.query(qr, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.status(200).json({ results: results });
                 }
             });
         } catch (error) {

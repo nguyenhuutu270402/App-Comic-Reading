@@ -59,3 +59,8 @@ export const updateDanhGia = async (idnguoidung, idtruyen, sosao) => {
     const res = await axiosInstance.post(`api/update-danh-gia`, data);
     return res;
 }
+
+export const getListImageChuongByIdChuong = async (id) => {
+    const res = await axiosInstance.get(`api/get-get-list-image-chuong-theo-id-chuong/${id}`);
+    return res;
+}

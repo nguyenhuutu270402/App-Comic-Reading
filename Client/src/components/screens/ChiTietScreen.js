@@ -1,13 +1,8 @@
 import { StyleSheet, Text, View, Image, Pressable, FlatList, ToastAndroid, Alert, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Dialog, Portal, Provider, Modal } from 'react-native-paper';
+import { Modal } from 'react-native-paper';
 import { ApiContext } from '../contexts/ApiContext';
-import { Ionicons } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { Fontisto } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo } from '@expo/vector-icons';
 const ChiTietScreen = (props) => {
     const { navigation, route: { params: { id } } } = props;
     const { onGetOneTruyenById, onGetListChuongByIdTruyen,
@@ -17,13 +12,14 @@ const ChiTietScreen = (props) => {
 
     const [kiemTraTheoDoi, setKiemTraTheoDoi] = useState(false);
     const [kiemTraDanhGia, setKiemTraDanhGia] = useState(false);
+    const [isShowModal, setIsShowModal] = useState(false);
+    const [isShowXemThem, setIsShowXemThem] = useState(false);
+    const [rating, setRating] = useState(0);
     const [oneTruyen, setOneTruyen] = useState({});
     const [listChuongByIdTruyen, setListChuongByIdTruyen] = useState([]);
     const [listTheLoaiByIdTruyen, setListTheLoaiByIdTruyen] = useState([]);
     const [listTacGiaByIdTruyen, setListTacGiaByIdTruyen] = useState([]);
-    const [isShowModal, setIsShowModal] = useState(false);
 
-    const [rating, setRating] = useState(0);
     async function fetchData() {
         try {
             const response1 = await onGetOneTruyenById(id);
@@ -63,6 +59,30 @@ const ChiTietScreen = (props) => {
         }
     }
 
+    const onFormatDate2 = (date) => {
+        var dateCurent = new Date();
+        var d = new Date(date);
+        var timeFormat = new Date(dateCurent - d);
+        if (d && timeFormat < 3600000 && timeFormat > 0) {
+            var minute = (timeFormat / 60000).toFixed(0);
+            return minute + ' phút trước';
+        }
+        else if (d && timeFormat < 86400000 && timeFormat > 0) {
+            var hours = (timeFormat / 3600000).toFixed(0);
+            return hours + ' giờ trước';
+        } else if (d && timeFormat < 2592000000) {
+            var date = (timeFormat / 86400000).toFixed(0);
+            return date + ' ngày trước';
+        }
+        else if (d && timeFormat > 2592000000) {
+            var date = d.getDate();
+            var month = d.getMonth() + 1;
+            var year = d.getFullYear();
+            const dateString = date.toString().padStart(2, "0") + '/' + month.toString().padStart(2, "0") + '/' + year;
+            return dateString;
+        }
+    }
+
     const onFormatTinhTrang = (tinhtrang) => {
         if (tinhtrang && tinhtrang == 1) {
             return 'Đang tiến hành';
@@ -74,6 +94,8 @@ const ChiTietScreen = (props) => {
     const onFormatLuotXem = (luotxem) => {
         if (luotxem) {
             return luotxem.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        } else {
+            return '0';
         }
     }
 
@@ -120,14 +142,6 @@ const ChiTietScreen = (props) => {
     const renderHeader = () => {
         return (
             <View>
-                <View style={styles.boxIconTop}>
-                    <Pressable style={styles.iconBack} onPress={() => navigation.pop()}>
-                        <Ionicons name="return-down-back-outline" size={28} color="black" />
-                    </Pressable>
-                    <Pressable style={styles.iconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
-                        <EvilIcons name="search" size={34} color="black" />
-                    </Pressable>
-                </View>
                 <View style={styles.boxThongTin}>
                     <Text style={styles.textTenTruyen}>{oneTruyen.tentruyen}</Text>
                     <Text style={styles.textCapNhat}>[{onFormatDate(oneTruyen.ngaycapnhat)}]</Text>
@@ -210,28 +224,82 @@ const ChiTietScreen = (props) => {
                                 <Text style={styles.textTheoDoi}>Theo dõi</Text>
                             </Pressable>
                     }
-
-
                     <View style={styles.boxAPITheoDoi}>
                         <Text style={styles.textAPITheoDoi}>{onFormatLuotXem(oneTruyen.tongtheodoi)}</Text>
                         <Text style={styles.textLuotTheoDoi}> Lượt theo dõi</Text>
                     </View>
                 </View>
+                <Pressable style={styles.btDocTuDau} onPress={() => navigation.navigate('ChiTietChuongScreen', { id: listChuongByIdTruyen[0].id })}>
+                    <Text style={styles.textTheoDoi}>Đọc từ đầu</Text>
+                </Pressable>
+                <View style={styles.boxNoiDung}>
+                    <View style={styles.boxIconNoiDung}>
+                        <MaterialCommunityIcons name="content-save-outline" size={24} color="#1181b3" />
+                        <Text style={styles.textIconNoiDung}>Nội dung</Text>
+                    </View>
+                    <View style={styles.lineNoiDung}></View>
+                    <View>
+                        {
+                            isShowXemThem === false ?
+                                <View>
+                                    <Text style={styles.textAPINoiDung} numberOfLines={3}>{oneTruyen.mota}</Text>
+                                    <Pressable onPress={() => setIsShowXemThem(true)}>
+                                        <Text style={styles.textXemThemNoiDung}>Xem thêm</Text>
+                                    </Pressable>
+                                </View>
+                                :
+                                <View>
+                                    <Text style={styles.textAPINoiDung}>{oneTruyen.mota}</Text>
+                                    <Pressable onPress={() => setIsShowXemThem(false)}>
+                                        <Text style={styles.textXemThemNoiDung}>Rút gọn</Text>
+                                    </Pressable>
+                                </View>
+                        }
+                    </View>
+                    <View style={styles.boxIconNoiDung}>
+                        <Ionicons name="list" size={24} color="#1181b3" />
+                        <Text style={styles.textIconNoiDung}>Danh sách chương</Text>
+                    </View>
+                    <View style={styles.lineDanhSachChuong}></View>
+
+                </View>
+
             </View>
         )
     }
     const renderItem = ({ item }) => (
+        <Pressable key={item.id} onPress={() => navigation.navigate('ChiTietChuongScreen', { id: item.id })}>
+            <View style={styles.boxChuongItem}>
+                <View style={styles.boxTextChuongItem}>
+                    <Text style={styles.textTenChuongItem}>Chapter {item.sochuong}</Text>
+                    <View style={styles.boxDateChuongItem}>
+                        <AntDesign name="clockcircleo" size={10} color="#777" />
+                        <Text style={styles.textDateChuongItem}> {onFormatDate2(item.ngaycapnhat)}</Text>
+                    </View>
+                </View>
+                <View style={styles.boxTongLuotXemChuongItem}>
+                    <FontAwesome name="eye" size={15} color="#777" />
+                    <Text style={styles.textTongLuotXemChuongItem}> {onFormatLuotXem(item.tongsoluot)}</Text>
+                </View>
+            </View>
 
-        <Pressable key={item.id} >
-            <Text>{item.tenchuong}</Text>
-            <Text>//////</Text>
+            <View>
+                <Text numberOfLines={1} style={styles.lineChuongItem}>-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -</Text>
+            </View>
         </Pressable>
     );
 
     return (
         <View style={styles.container}>
-
-            <FlatList style={styles.flatAllTruyen}
+            <View style={styles.boxIconTop}>
+                <Pressable style={styles.iconBack} onPress={() => navigation.pop()}>
+                    <Ionicons name="return-down-back-outline" size={28} color="black" />
+                </Pressable>
+                <Pressable style={styles.iconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
+                    <EvilIcons name="search" size={34} color="black" />
+                </Pressable>
+            </View>
+            <FlatList style={styles.flatChuong}
                 data={listChuongByIdTruyen}
                 renderItem={renderItem}
                 ListHeaderComponent={renderHeader}
@@ -278,7 +346,97 @@ const ChiTietScreen = (props) => {
 export default ChiTietScreen
 
 const styles = StyleSheet.create({
+    lineChuongItem: {
+        color: '#777',
+        fontWeight: '200',
+        textAlign: 'center',
+    },
+    textTongLuotXemChuongItem: {
+        fontSize: 14,
+        color: '#777',
+        fontWeight: '400',
+    },
+    boxTongLuotXemChuongItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    textDateChuongItem: {
+        fontSize: 12,
+        color: '#777',
+        fontWeight: '400',
+    },
+    boxDateChuongItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    textTenChuongItem: {
+        fontSize: 15,
+        color: '#222',
+        fontWeight: '400',
+    },
+    boxTextChuongItem: {
 
+    },
+    boxChuongItem: {
+        marginHorizontal: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    lineDanhSachChuong: {
+        width: '95%',
+        height: 2,
+        backgroundColor: '#1181b3',
+        marginHorizontal: 10,
+        marginBottom: 10,
+    },
+    textXemThemNoiDung: {
+        fontSize: 15,
+        color: '#1181b3',
+        fontWeight: '400',
+        marginHorizontal: 10,
+        marginBottom: 10,
+
+    },
+    textAPINoiDung: {
+        fontSize: 15,
+        color: '#333',
+        fontWeight: '400',
+        marginHorizontal: 10,
+        marginTop: 6,
+        lineHeight: 20,
+    },
+    lineNoiDung: {
+        width: '95%',
+        height: 2,
+        backgroundColor: '#1181b3',
+        marginHorizontal: 10,
+    },
+    textIconNoiDung: {
+        fontSize: 16,
+        textTransform: 'uppercase',
+        color: '#1181b3',
+        fontWeight: '300',
+    },
+    boxIconNoiDung: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginHorizontal: 10,
+    },
+    boxNoiDung: {
+
+    },
+    btDocTuDau: {
+        flexDirection: 'row',
+        backgroundColor: '#f0ad4e',
+        height: 35,
+        width: 110,
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        marginLeft: 10,
+        borderRadius: 5,
+        justifyContent: 'center',
+        marginVertical: 10,
+    },
     textDanhGiaXepHang: {
         textAlign: 'right',
         color: '#1181b3',

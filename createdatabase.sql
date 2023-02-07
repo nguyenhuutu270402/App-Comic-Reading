@@ -219,11 +219,11 @@ VALUES
 
 INSERT INTO image_chuong (imagelink, idchuong) 
 VALUES 
-('https://i225.ntcdntempv26.com/data/images/55854/807884/003.jpg?data=net', 1),
-('https://i225.ntcdntempv26.com/data/images/55854/807884/004.jpg?data=net', 1),
-('https://i225.ntcdntempv26.com/data/images/55854/807884/005.jpg?data=net', 1),
-('https://i225.ntcdntempv26.com/data/images/55854/807884/006.jpg?data=net', 1),
-('https://i225.ntcdntempv26.com/data/images/55854/807884/007.jpg?data=net', 1)
+('https://blogger.googleusercontent.com/img/a/AVvXsEjHoVPoBWlhkx5ZW4cqXAIBZ3ZwslvuL2uykONtTqHyjrB2pU95UHNgsH6ccBo410c1Ha1BSX2CsU1mBSXVkDuMhlcvwudupM78XrNIhrj5GbGm-nyD2gSGui2LN3zDifhRQsFcfzlBmn-PuyZuiDA62NWE8p1TdhFGgiJEq8M_9fjR4PQtSA7gePZx=s1969', 1),
+('https://blogger.googleusercontent.com/img/a/AVvXsEg6yqSuDhoaqOS9B2ct2HSD7UoaRsIEbqTvx4xeol-2HZA9l5z5YPVW3-bopKjb-GKL22WJQ_SpZC9r0g5xYrXzMYQa3-pN532Upxqe9zzJdlsLRANhUTNatkZX34O5PKvxn-3VfjpgIVAS7nTY02ZSXcXj2G_o4zIwin6BpFQLQ3CVKQoozKqb3jyW=s1400', 1),
+('https://blogger.googleusercontent.com/img/a/AVvXsEjtngI6dVmfTJdK_mZtkj0KAbca7WYcw2jYLmgm5bkKFXoaPiraLhISJGCCALFTLFv6Z-h-ocYnC6FD0VyBBIEuOm38iXv-NkRHOjbxLz318B7TFPo_fcTDdYVw7NyBekhH77jr7AhlfpKXBFsmRR84Eseeotk416DSmEYpnWBwhDWRmYZtPkzmhqBA=s1180', 1),
+('https://blogger.googleusercontent.com/img/a/AVvXsEh8QH4Z4w90d-XyX1_rAVGhlHV77-8n2dYsqdhrSwVfk6uXdBz3GeqNDnPxGIse8_0p_DuWvc_zfrfLFGgVgU-l85QTj9dDhA-U_48Cu46cloSohJ6lrrflueUoIDI4Ck2FN-D-7K_O327ZBlI1DigKMg0wg12f1zxdGAnWAffH-MJwvJw8c_pOPYEq=s1969', 1),
+('https://blogger.googleusercontent.com/img/a/AVvXsEhhp7c4rsKzQw2GDZAA9gULqIKh11PJpkCjGyaFfCu14wlUZkWHfzUFe2L3llMcgifPzkNyBTqwjn9prk4o0xJiGrf0F3fkBFmbN8TvWPdKD6JrqcFIzF0K3TNvnatdRU9NHyQIMCIuTxHcSzd4N4zFKHKHJNGTqTEXEWc30YFaOjbZheqPW4pd8u1a=s1969', 1)
 ;
 
 INSERT INTO theodoi (idnguoidung, idtruyen) VALUES 
