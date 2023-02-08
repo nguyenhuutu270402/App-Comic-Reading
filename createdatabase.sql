@@ -206,15 +206,15 @@ INSERT INTO ct_theloai (idtruyen, idtheloai) VALUES
 
 INSERT INTO chuong (tenchuong, sochuong, ngaycapnhat, idtruyen) 
 VALUES 
-('Chapter 1: Cô gái tên Nanase', 1, '2023-05-01 12:00:00', 5)
-,('Chapter 2: Nô lệ của công ty mất nhà', 2, '2023-02-04 12:00:00', 4)
-,('Chapter 3: Em yêu anh vì XX', 3, '2022-12-03 12:00:00', 8)
+('Chapter 1: Cô gái tên Nanase', 1, '2023-02-04 12:00:00', 1)
+,('Chapter 2: Nô lệ của công ty mất nhà', 2, '2023-02-04 12:00:00', 1)
+,('Chapter 3: Em yêu anh vì XX', 3, '2022-12-03 12:00:00', 1)
 ,('Chapter 4: Hình phạt của Nanase', 4, '2022-12-04 12:00:00', 1)
-,('Chapter 5: Cuộc viếng thăm bất ngờ của cô em gái', 5, '2022-12-05 12:00:00', 9)
-,('Chapter 1', 1, '2022-12-05 12:00:00', 10)
-,('Chapter 1', 1, '2022-12-15 12:00:00', 11)
-,('Chapter 1', 1, '2022-12-08 12:00:00', 12)
-,('Chapter 1', 1, '2022-12-25 12:00:00', 14)
+,('Chapter 5: Cuộc viếng thăm bất ngờ của cô em gái', 5, '2022-12-05 12:00:00', 1)
+,('Chapter 1', 1, '2022-12-05 12:00:00', 2)
+,('Chapter 1', 1, '2022-12-15 12:00:00', 3)
+,('Chapter 1', 1, '2022-12-08 12:00:00', 4)
+,('Chapter 1', 1, '2022-12-25 12:00:00', 5)
 ;
 
 INSERT INTO image_chuong (imagelink, idchuong) 
@@ -223,7 +223,23 @@ VALUES
 ('https://blogger.googleusercontent.com/img/a/AVvXsEg6yqSuDhoaqOS9B2ct2HSD7UoaRsIEbqTvx4xeol-2HZA9l5z5YPVW3-bopKjb-GKL22WJQ_SpZC9r0g5xYrXzMYQa3-pN532Upxqe9zzJdlsLRANhUTNatkZX34O5PKvxn-3VfjpgIVAS7nTY02ZSXcXj2G_o4zIwin6BpFQLQ3CVKQoozKqb3jyW=s1400', 1),
 ('https://blogger.googleusercontent.com/img/a/AVvXsEjtngI6dVmfTJdK_mZtkj0KAbca7WYcw2jYLmgm5bkKFXoaPiraLhISJGCCALFTLFv6Z-h-ocYnC6FD0VyBBIEuOm38iXv-NkRHOjbxLz318B7TFPo_fcTDdYVw7NyBekhH77jr7AhlfpKXBFsmRR84Eseeotk416DSmEYpnWBwhDWRmYZtPkzmhqBA=s1180', 1),
 ('https://blogger.googleusercontent.com/img/a/AVvXsEh8QH4Z4w90d-XyX1_rAVGhlHV77-8n2dYsqdhrSwVfk6uXdBz3GeqNDnPxGIse8_0p_DuWvc_zfrfLFGgVgU-l85QTj9dDhA-U_48Cu46cloSohJ6lrrflueUoIDI4Ck2FN-D-7K_O327ZBlI1DigKMg0wg12f1zxdGAnWAffH-MJwvJw8c_pOPYEq=s1969', 1),
-('https://blogger.googleusercontent.com/img/a/AVvXsEhhp7c4rsKzQw2GDZAA9gULqIKh11PJpkCjGyaFfCu14wlUZkWHfzUFe2L3llMcgifPzkNyBTqwjn9prk4o0xJiGrf0F3fkBFmbN8TvWPdKD6JrqcFIzF0K3TNvnatdRU9NHyQIMCIuTxHcSzd4N4zFKHKHJNGTqTEXEWc30YFaOjbZheqPW4pd8u1a=s1969', 1)
+('https://blogger.googleusercontent.com/img/a/AVvXsEhhp7c4rsKzQw2GDZAA9gULqIKh11PJpkCjGyaFfCu14wlUZkWHfzUFe2L3llMcgifPzkNyBTqwjn9prk4o0xJiGrf0F3fkBFmbN8TvWPdKD6JrqcFIzF0K3TNvnatdRU9NHyQIMCIuTxHcSzd4N4zFKHKHJNGTqTEXEWc30YFaOjbZheqPW4pd8u1a=s1969', 1),
+('https://blogger.googleusercontent.com/img/a/AVvXsEhP0L28cEoX6fgg18sh6oYDn7jUTqH40Uj-yQthjBisypOAwSFQf9nDhktPoJelgP0WwQMJdfYJqq1QLD2534FHIMnSO0Pk9VVyvTmagAJ_DDxK8gT2TQitb1HTIfmz6kP0LItYeGq8WfMqjxQx4XWcedVbYQP3esexr-cgOJDW_bODgD4CVj9HV6u6=s1969', 1),
+('https://blogger.googleusercontent.com/img/a/AVvXsEhluDqyzX6jSeNIsMegiw6GqU4brcBnpLjIZf_jdMCZEjWa7NsV8OZpEsOsQ_DKsv1oGVDH9DTOUZJ64QE4vxviSHa-5Tvp0WhnhVxm7sskcf5AcM4Gw3LvsogL2cL-sH2wXS2x5mSRA6A_JvjXWVv8Gllejs2JT344ZxpdYvRRddiwD_PvpXmaAnvf=s1969', 1),
+('https://blogger.googleusercontent.com/img/a/AVvXsEi-Rs8L_lJUq_eOghSEZNUhsXAlhjrTzsxTircn_n-kVt8z7BqGJai7B0KBLU6_7BnVD_7_3UmIlrFmHn7D-NncT3-4Aw3MgREZNZHJJ6Oi4m1VLLSBFWwsq0vnCpp17i4SBKA59pAJ7NLXh1NI5H8SC_SWdW3VpdUkWc0JrjE1y62h0_gHhNbZ4rqq=s1969', 1),
+('https://blogger.googleusercontent.com/img/a/AVvXsEi7pYwbqyo_GKiny4USIwWqt6YlS8LosFZQvSZdv0uvlGvX1-OCBQ_j-vceOnQJeTuOH04t68e3WNiLJKpj7W5p3hVxMeG4kZQPePXheF-pKsfupDqVeb1cpIWdRAnDLGU4pAH11AOfU9gPO_HmIv0uynxPTh_u2zohgfZLf4e5t7kLPlx_jB0azCqF=s1969', 1),
+('https://blogger.googleusercontent.com/img/a/AVvXsEiMNXAF_cR18X8yjdOiWbVpXucySW5xWFHXKCynivz-whQZYUwwzpVdLP9PWm0jKySv1hJd-zIMxDzzbN_R9O6WmFxtDGhfrC8A39V2OXMpPE0OR-hJ8b1umh-Gys_ezf3qX_Kj9hj6QVyOkpL7ihdWKWrNk6hoGTsrlj3Ia0dR8WHeCbL4b39je93a=s1969', 1),
+('https://blogger.googleusercontent.com/img/a/AVvXsEi7diexbdD2nYm-aBzfLuwCkztA8t_2YOuEu64JkXqbKiJcyIBO5xqfIiroUuDNQnfZcmwSUEQHNwcW4zeun6QmE6NpZoiMJk03hqsYN13hzeab1mWNY33kYAmEYHdqnYlfL3z5jLivmabQ2TNmJt7B398puW3AGWOi4CaezyTPTX2VFAkNgs_-O3NC=s1969', 1),
+
+('https://blogger.googleusercontent.com/img/a/AVvXsEj-Rf9Q1TXyAfgZPjIQFxKlcVjohvGSo9IE5srV4Es9maOa8hdpBkU3T4PoElAuYh2pn4NXqCfNwpKA4wVLtA5jITPxchTdnIOp7EwZQU_ZkzUoRqYFfGZYy-DmGh0s6KUeoiCVvDUYwnNTAoIDU7rDfICyveStgPXS6uWN3fI14RwsgZbuic_1Bbxr=s1969', 2),
+('https://blogger.googleusercontent.com/img/a/AVvXsEh5G-bE6tBfD1siDsR2uDGF1iHEpmEsvdaFxXfEznwaQFsOw9lBKoX3YEamAOyunlLzzoLkOYbksm63hS0tOZ_a_Dw3CyMGer2wcdU5wEwAIkbTJHIrREVg13ZMI3lHmGEK2ugxYAd3Ol8coKnHQ61k8Qg_NEZtWHxtIC1eqRtTbNveFoZDOvx9UYk0=s1969', 2),
+('https://blogger.googleusercontent.com/img/a/AVvXsEjOfQEkywdZF5JVVNz3Ib99hWDaYKyVuEYZh2lv400znp4YNESKXCvDJqDnvAjaBnFMAnAVcvacZJQeZDAYJKrPZz8TiYsz5xMspIXEWDK205pZUDU_qZT9JY2I0UTSZNDm7Gz_7HFXKdi8eUYTAecm7L10--ESuhmp3ST4i2fUguDouEtQ-SGcrHQK=s1969', 2),
+('https://blogger.googleusercontent.com/img/a/AVvXsEj7fW3JB_32CdNviPX8X1jDUugUU_H0T0myCCmxEBQ4L959N2CnpqBDUtg3ygUIarq-6FNRq66shdgquV8HwWDqrGjCtVVVlccaRTy5re6CQ-sIy46VYtJvK7bq7iN7ZptYfAKcAU0talpjKQD0yPq_ptTvWKyMHRreoIxmDyxKLW3qr2e2T1wORzH_=s1969', 2),
+('https://blogger.googleusercontent.com/img/a/AVvXsEhkRMZU8zT_VdOpBdQr0_x-JwPFlEBjylC_FSeS4D-VLZsMlXu2RG1k44svQKgDgi-4k2mFn6gkZN6mxUqXHdlcWeCKegNuXCUlOCX-E8rnHVLwZ7sr_UE1KSiJ1Lg4zFsAn8nvsCsn--WvmisO4791P7hin4mByVJFpXF1lwR8bp-VXbbpLgh4OvVD=s1969', 2),
+('https://blogger.googleusercontent.com/img/a/AVvXsEi-lVxI76s15iGOPqOJb1lm9i_TkWREGmBH-KiF-JYhhhTWaA7Ky3TMEvx0S2zNq_W-V8JEBw1q3n1wg4POZMRuHfhAhcZPZDxO-OsqDbTzrtKo0YIlRqZvlfRiyPa3_NmDSyJ5QLV5buJR-D0OFfQ5gn4BDlRRfAZM46RmOJ1aiKmMEvh1r3OykN4d=s1969', 2),
+('https://blogger.googleusercontent.com/img/a/AVvXsEjM_cYKtXHO9ctHp10HcVuMUhkjCRfKVSZC4lpU2iiNMiN6io6UrNBInwDH83QT08Ebci7gRbnB0x8ky1L8cDnmg8Tqhz-I1sdieNiRd8V3sSV3o9Fah1xZvEPi9H0aTXm6xpNrQwBtpItS3BLcp6AxO-x0kUay1nx3RvoUOHsbiACYLzPGuwxNATa0=s1969', 2),
+('https://blogger.googleusercontent.com/img/a/AVvXsEjxpbAuYc2zP0ASRcC2--XclMC0LwzfyMn8iQYhbplYU3jj6q9GhVDZAfA9rvfvo8Vzay4iwtqH-iaCv6l7W6tayTJEVbPliauz28Hf8dwlCRfoczT2zrXelq1U6SCfaF7DTE4Ukny3dBJP8E49lftw5yym8GAv_mBbmoKCkLtHm8-GyZ9RPyAzkST1=s1969', 2),
+('https://blogger.googleusercontent.com/img/a/AVvXsEjGgMDl1W6DHtwrlAsFpbuUKQeNRe0DNn2v5aTpIUojsrjioxLGvKfhEXDdqDh3Ofm0YO4rJbTeVWDxT_l4QQXPvwJSQ69YMJPqImZ_Yao7C-06eyh2iQFtGl4vg6gLrXaY-ByvuGvDbnDM_NaHp83ccz5S_z0I8bHBveCH_GMdhvehoBQVkkuIlqbH=s1969', 2)
 ;
 
 INSERT INTO theodoi (idnguoidung, idtruyen) VALUES 

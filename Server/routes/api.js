@@ -39,5 +39,7 @@ router.post('/update-danh-gia', apiController.updateDanhGia);
 
 router.get('/get-get-list-image-chuong-theo-id-chuong/:idChuong', apiController.getListImageChuongByIdChuong);
 
+router.get('/get-one-chuong-theo-id-chuong/:id', apiController.getOneChuongById);
+
 
 module.exports = router;

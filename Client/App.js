@@ -3,12 +3,13 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import TabBarBottom from './src/components/navigations/TabBarBottom';
+import BottomTabNavigator from './src/components/navigations/BottomTabNavigator';
 import { ApiContextProvider } from './src/components/contexts/ApiContext';
 export default function App() {
   return (
     <ApiContextProvider>
       <NavigationContainer>
-        <TabBarBottom />
+        <BottomTabNavigator />
         <StatusBar style="dark" />
       </NavigationContainer>
     </ApiContextProvider>

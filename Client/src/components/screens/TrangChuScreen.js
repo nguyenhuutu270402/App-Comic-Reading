@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, Pressable, FlatList, Dimensions } from 'react-native';
 import { ApiContext } from '../contexts/ApiContext';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     imageTruyen: {
         width: '100%',
         // height: '100%',
-        height: 200,
+        aspectRatio: 0.68,
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5,
     },
@@ -199,19 +199,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: 5,
         alignItems: 'flex-end',
+        width: (Dimensions.get('window').width / 2) - 10,
+        justifyContent: 'space-evenly'
     },
     textNameTop10: {
         color: 'white',
         fontSize: 16,
         fontWeight: '500',
-        width: 190,
+        width: (Dimensions.get('window').width / 2) - 10,
         textAlign: 'center',
     },
     boxNameTop10: {
         position: 'absolute',
         backgroundColor: '#000000',
         opacity: 0.8,
-        width: 202,
+        width: (Dimensions.get('window').width / 2) - 4,
         bottom: 0,
         alignContent: 'center',
         alignItems: 'center',
@@ -219,8 +221,8 @@ const styles = StyleSheet.create({
     },
 
     imageTop10: {
-        width: 202,
-        height: 250,
+        width: (Dimensions.get('window').width / 2) - 4,
+        aspectRatio: 0.82,
     },
     containerItem: {
         position: 'relative',

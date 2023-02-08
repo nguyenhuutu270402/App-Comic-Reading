@@ -229,7 +229,7 @@ const ChiTietScreen = (props) => {
                         <Text style={styles.textLuotTheoDoi}> Lượt theo dõi</Text>
                     </View>
                 </View>
-                <Pressable style={styles.btDocTuDau} onPress={() => navigation.navigate('ChiTietChuongScreen', { id: listChuongByIdTruyen[0].id })}>
+                <Pressable style={styles.btDocTuDau} onPress={() => navigation.navigate('ChiTietChuongScreen', { id: listChuongByIdTruyen[listChuongByIdTruyen.length - 1].id, index: listChuongByIdTruyen.length - 1 })}>
                     <Text style={styles.textTheoDoi}>Đọc từ đầu</Text>
                 </Pressable>
                 <View style={styles.boxNoiDung}>
@@ -267,8 +267,8 @@ const ChiTietScreen = (props) => {
             </View>
         )
     }
-    const renderItem = ({ item }) => (
-        <Pressable key={item.id} onPress={() => navigation.navigate('ChiTietChuongScreen', { id: item.id })}>
+    const renderItem = ({ item, index }) => (
+        <Pressable key={item.id} onPress={() => navigation.navigate('ChiTietChuongScreen', { id: item.id, index: index })}>
             <View style={styles.boxChuongItem}>
                 <View style={styles.boxTextChuongItem}>
                     <Text style={styles.textTenChuongItem}>Chapter {item.sochuong}</Text>
@@ -293,7 +293,7 @@ const ChiTietScreen = (props) => {
         <View style={styles.container}>
             <View style={styles.boxIconTop}>
                 <Pressable style={styles.iconBack} onPress={() => navigation.pop()}>
-                    <Ionicons name="return-down-back-outline" size={28} color="black" />
+                    <AntDesign name="left" size={24} color="black" />
                 </Pressable>
                 <Pressable style={styles.iconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
                     <EvilIcons name="search" size={34} color="black" />
@@ -586,7 +586,8 @@ const styles = StyleSheet.create({
     },
     imgTruyen: {
         width: '50%',
-        height: 250,
+        // height: 250,
+        aspectRatio: 0.82,
         marginVertical: 16,
     },
     textCapNhat: {
@@ -622,6 +623,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginHorizontal: 20,
         marginTop: 26,
+        // backgroundColor: 'tomato',
     },
     container: {
         backgroundColor: 'white',

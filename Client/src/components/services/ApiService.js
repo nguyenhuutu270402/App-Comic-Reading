@@ -64,3 +64,8 @@ export const getListImageChuongByIdChuong = async (id) => {
     const res = await axiosInstance.get(`api/get-get-list-image-chuong-theo-id-chuong/${id}`);
     return res;
 }
+
+export const getOneChuongById = async (id) => {
+    const res = await axiosInstance.get(`api/get-one-chuong-theo-id-chuong/${id}`);
+    return res;
+}

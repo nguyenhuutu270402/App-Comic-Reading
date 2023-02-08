@@ -281,6 +281,22 @@ const apiController = {
         }
     },
 
+    getOneChuongById: async (req, res) => {
+        try {
+            var id = req.params.id;
+            var qr = `SELECT chuong.*, COUNT(DISTINCT luotxem.id) AS tongsoluot FROM chuong left JOIN luotxem ON chuong.id = luotxem.idchuong WHERE chuong.id = ${id} GROUP BY chuong.id ORDER BY chuong.sochuong desc`
+            database.query(qr, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.status(200).json({ results: results[0] });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
 }
 
 module.exports = apiController;

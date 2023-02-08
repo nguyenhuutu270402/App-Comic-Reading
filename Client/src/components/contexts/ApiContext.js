@@ -3,7 +3,7 @@ import {
     getTop10Truyen, get3Chuong, getAllTruyen, getListChuongByIdTruyen,
     getOneTruyenById, getListTheLoaiByIdTruyen, getListTacGiaByIdTruyen,
     addTheoDoi, kiemTraTheoDoi, deleteTheoDoi, addDanhGia, kiemTraDanhGia,
-    updateDanhGia, getListImageChuongByIdChuong
+    updateDanhGia, getListImageChuongByIdChuong, getOneChuongById
 } from '../services/ApiService';
 
 export const ApiContext = createContext();
@@ -137,13 +137,22 @@ export const ApiContextProvider = (props) => {
         }
     }
 
+    const onGetOneChuongById = async (id) => {
+        try {
+            const res = await getOneChuongById(id);
+            return res;
+        } catch (error) {
+            console.log('onGetOneChuongById error: ', error);
+        }
+    }
+
     return (
         <ApiContext.Provider
             value={{
                 onGetTop10Truyen, onGet3Chuong, onGetAllTruyen, onGetListChuongByIdTruyen,
                 onGetOneTruyenById, onGetListTheLoaiByIdTruyen, onGetListTacGiaByIdTruyen,
                 onAddTheoDoi, onKiemTraTheoDoi, onDeleteTheoDoi, onAddDanhGia, onKiemTraDanhGia,
-                onUpdateDanhGia, onGetListImageChuongByIdChuong
+                onUpdateDanhGia, onGetListImageChuongByIdChuong, onGetOneChuongById
             }}
         >
             {children}
