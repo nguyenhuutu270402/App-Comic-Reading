@@ -162,8 +162,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500',
         width: '100%',
-        // textAlign: 'center',
-        // backgroundColor: 'red'
+        textTransform: 'capitalize',
     },
     boxNameTruyen: {
         alignContent: 'center',
@@ -208,6 +207,8 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         width: (Dimensions.get('window').width / 2) - 10,
         textAlign: 'center',
+        textTransform: 'capitalize',
+
     },
     boxNameTop10: {
         position: 'absolute',
