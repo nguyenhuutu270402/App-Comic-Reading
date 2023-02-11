@@ -1,8 +1,13 @@
-import { StyleSheet, Text, View, Image, Pressable, FlatList, ToastAndroid, Alert, Dimensions, StatusBar, ScrollView } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import {
+    StyleSheet, Text, View, Image, Pressable, FlatList, ToastAndroid, Alert, Dimensions,
+    StatusBar, ScrollView, TextInput
+} from 'react-native';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { ApiContext } from '../contexts/ApiContext';
-import { Modal, RadioButton } from 'react-native-paper';
-import { Ionicons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo } from '@expo/vector-icons';
+import { Modal } from 'react-native-paper';
+import { Ionicons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo, Feather } from '@expo/vector-icons';
+import moment from 'moment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -10,7 +15,8 @@ const ChiTietChuongScreen = (props) => {
     const { navigation, route: { params: { id, index } } } = props;
     const currentIndex = index;
     const { onGetListImageChuongByIdChuong, onGetListChuongByIdTruyen, onGetOneChuongById,
-        onAddTheoDoi, onKiemTraTheoDoi, onDeleteTheoDoi, } = useContext(ApiContext);
+        onAddTheoDoi, onKiemTraTheoDoi, onDeleteTheoDoi, onAddLuotXem, onGetTongBinhLuanByIdTruyen,
+        onAddBinhLuan, onGetListBinhLuanByIdTruyen, } = useContext(ApiContext);
     const [listImage, setListImage] = useState([]);
     const dimensionsWidth = Dimensions.get('screen').width;
     const [listChuongByIdTruyen, setListChuongByIdTruyen] = useState([]);
@@ -18,12 +24,16 @@ const ChiTietChuongScreen = (props) => {
     const [aspectRatio, setAspectRatio] = useState(0.1);
     const [isShowMore, setIsShowMore] = useState(false);
     const [isShowModal, setIsShowModal] = useState(false);
+    const [isShowModal2, setIsShowModal2] = useState(false);
     const [oneChuong, setOneChuong] = useState({});
     const [kiemTraTheoDoi, setKiemTraTheoDoi] = useState(false);
-
-
+    const [nguoidung, setNguoidung] = useState({});
+    const [isLogin, setIsLogin] = useState(false);
     const [selectedValue, setSelectedValue] = useState(1);
-
+    const flatListRef = useRef(null);
+    const [tongBinhLuan, setTongBinhLuan] = useState(0);
+    const [listBinhLuan, setListBinhLuan] = useState([]);
+    const [noiDungBinhLuan, setNoiDungBinhLuan] = useState('');
 
 
     async function fetchData() {
@@ -32,10 +42,26 @@ const ChiTietChuongScreen = (props) => {
             const response2 = await onGetOneChuongById(id);
             setListImage(response1.results);
             setOneChuong(response2.results);
+
+            AsyncStorage.getItem('nguoidung')
+                .then(async value => {
+                    const myObject = JSON.parse(value);
+                    setNguoidung(myObject);
+                    if (myObject == null) {
+                        setIsLogin(false);
+                    } else {
+                        setIsLogin(true);
+                        const response4 = await onKiemTraTheoDoi(myObject.id, response2.results.idtruyen);
+                        setKiemTraTheoDoi(response4.results);
+                    }
+                });
+
             const response3 = await onGetListChuongByIdTruyen(response2.results.idtruyen);
             setListChuongByIdTruyen(response3.results);
-            const response4 = await onKiemTraTheoDoi(4, response2.results.idtruyen);
-            setKiemTraTheoDoi(response4.results);
+            const response4 = await onGetTongBinhLuanByIdTruyen(response2.results.idtruyen);
+            setTongBinhLuan(response4.results);
+            const response5 = await onGetListBinhLuanByIdTruyen(response2.results.idtruyen);
+            setListBinhLuan(response5.results);
 
             // set up witdh cho ảnh
             var getMidImage = Math.round(response1.results.length / 2);
@@ -44,8 +70,6 @@ const ChiTietChuongScreen = (props) => {
             }, (errorMsg) => {
                 console.log(errorMsg);
             });
-
-
             setSelectedValue(id);
         } catch (error) {
             console.log(error);
@@ -56,7 +80,14 @@ const ChiTietChuongScreen = (props) => {
 
     useEffect(() => {
         fetchData();
-    }, [selectedValue, id]);
+    }, []);
+
+    useEffect(() => {
+        scrollToItem();
+    }, [isShowModal]);
+
+
+
     const renderHeader = () => {
         return (
 
@@ -75,7 +106,6 @@ const ChiTietChuongScreen = (props) => {
 
     const renderItem = ({ item }) => (
         <View style={styles.imageItem}>
-            {/* {getARatio()} */}
             <Image
                 source={{ uri: item.imagelink }}
                 style={{
@@ -88,8 +118,48 @@ const ChiTietChuongScreen = (props) => {
 
     );
 
+    const renderItemModal = ({ item, index }) => (
+        <View>
+
+            <Pressable style={styles.itemChuong} key={item.id} onPress={() => { addLuotXem(item.id); navigation.replace('ChiTietChuongScreen', { id: item.id, index: index }) }}>
+
+                <Text style={styles.textTenChuong} key={item.id}>{item.tenchuong}</Text>
+                <View style={styles.boxRadioButton}>
+                    {
+                        selectedValue === item.id ?
+                            <View style={styles.pointRadioButton} />
+                            :
+                            <View />
+                    }
+                </View>
+            </Pressable>
+            <View style={styles.lineItemChuong}></View>
+        </View>
+
+    );
+
+
+    const renderItemModal2 = ({ item }) => (
+        <View style={styles.itemModalBinhLuan}>
+            <Image
+                source={{ uri: item.avatar }}
+                style={styles.imageItemModalBinhLuan} />
+            <View style={styles.boxTTBinhLuan}>
+                <View style={styles.boxTenVaNgay}>
+                    <Text numberOfLines={1} style={styles.textTenNguoiBinhLuan}>{item.tennguoidung}</Text>
+                    <Text style={styles.textNgayBinhLuan}>{onFormatDate(item.ngaybinhluan)}</Text>
+                </View>
+                <Text style={styles.textNoiDungNBL}>{item.noidung}</Text>
+            </View>
+        </View>
+    );
+
     const deleteTheoDoi = async () => {
-        const response = await onDeleteTheoDoi(4, oneChuong.idtruyen);
+        if (isLogin == false) {
+            ToastAndroid.show('Đăng nhập để sử dụng chức năng này', ToastAndroid.CENTER);
+            return;
+        }
+        const response = await onDeleteTheoDoi(nguoidung.id, oneChuong.idtruyen);
         if (response.results) {
             setKiemTraTheoDoi(false);
             ToastAndroid.show('Bỏ theo dõi thành công', ToastAndroid.CENTER);
@@ -98,10 +168,46 @@ const ChiTietChuongScreen = (props) => {
     }
 
     const addTheoDoi = async () => {
-        const response = await onAddTheoDoi(4, oneChuong.idtruyen);
+        if (isLogin == false) {
+            ToastAndroid.show('Đăng nhập để sử dụng chức năng này', ToastAndroid.CENTER);
+            return;
+        }
+        const response = await onAddTheoDoi(nguoidung.id, oneChuong.idtruyen);
         setKiemTraTheoDoi(true);
         ToastAndroid.show('Theo dõi thành công', ToastAndroid.CENTER);
 
+    }
+
+    const onBinhLuan = async () => {
+        if (isLogin == false) {
+            ToastAndroid.show('Đăng nhập để sử dụng chức năng này', ToastAndroid.CENTER);
+            return;
+        } else if (nguoidung.tennguoidung == '' || nguoidung.avatar == null) {
+            ToastAndroid.show('Cập nhật thông tin tài khoản để sử dụng chức năng này', ToastAndroid.CENTER);
+            return;
+        } else {
+            setIsShowModal2(true);
+        }
+    }
+
+    const addBinhLuan = async () => {
+        if (noiDungBinhLuan.length > 0) {
+            let date = new Date();
+            moment.locale('vi');
+            let formattedDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
+            await onAddBinhLuan(nguoidung.id, oneChuong.idtruyen, noiDungBinhLuan, formattedDate);
+            setNoiDungBinhLuan('');
+            ToastAndroid.show('Bình luận thành công', ToastAndroid.CENTER);
+            // lay lai data binhluan
+            const response4 = await onGetTongBinhLuanByIdTruyen(oneChuong.idtruyen);
+            setTongBinhLuan(response4.results);
+            const response5 = await onGetListBinhLuanByIdTruyen(oneChuong.idtruyen);
+            setListBinhLuan(response5.results);
+            return;
+        } else {
+            ToastAndroid.show('Chưa có dòng chữ nào :(', ToastAndroid.CENTER);
+
+        }
     }
 
     const onAlertDeleteTheoDoi = () =>
@@ -118,7 +224,51 @@ const ChiTietChuongScreen = (props) => {
             ]
         );
 
+    const addLuotXem = async (idChuong) => {
+        let date = new Date();
+        moment.locale('vi');
+        let formattedDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
+        if (isLogin == false) {
+            const response = await onAddLuotXem(1, idChuong, formattedDate);
+        } else {
+            const response = await onAddLuotXem(nguoidung.id, idChuong, formattedDate);
+        }
+    }
+    const scrollToItem = () => {
+        try {
+            flatListRef.current.scrollToIndex({
+                index: currentIndex,
+                animated: true,
+            });
 
+        } catch (error) {
+            console.log('error: ', error);
+
+        }
+    };
+    const onFormatDate = (date) => {
+        var dateCurent = new Date();
+        var d = new Date(date);
+        var timeFormat = new Date(dateCurent - d);
+        if (d && timeFormat < 3600000 && timeFormat > 0) {
+            var minute = (timeFormat / 60000).toFixed(0);
+            return minute + ' phút trước';
+        }
+        else if (d && timeFormat < 86400000 && timeFormat > 0) {
+            var hours = (timeFormat / 3600000).toFixed(0);
+            return hours + ' giờ trước';
+        } else if (d && timeFormat < 2592000000) {
+            var date = (timeFormat / 86400000).toFixed(0);
+            return date + ' ngày trước';
+        }
+        else if (d && timeFormat > 2592000000) {
+            var date = d.getDate();
+            var month = d.getMonth() + 1;
+            var year = d.getFullYear();
+            const dateString = date.toString().padStart(2, "0") + '/' + month.toString().padStart(2, "0") + '/' + year;
+            return dateString;
+        }
+    }
     return (
 
         <View style={styles.container}>
@@ -147,7 +297,7 @@ const ChiTietChuongScreen = (props) => {
                                         currentIndex === listChuongByIdTruyen.length - 1 ?
                                             <View />
                                             :
-                                            <Pressable style={styles.truocMoreBottom} onPress={() => navigation.replace('ChiTietChuongScreen', { id: listChuongByIdTruyen[currentIndex + 1].id, index: currentIndex + 1 })}>
+                                            <Pressable style={styles.truocMoreBottom} onPress={() => { addLuotXem(listChuongByIdTruyen[currentIndex + 1].id); navigation.replace('ChiTietChuongScreen', { id: listChuongByIdTruyen[currentIndex + 1].id, index: currentIndex + 1 }) }}>
                                                 <AntDesign name="left" size={20} color="tomato" />
                                                 <Text style={styles.texTruocMoreBottom}>Trước</Text>
                                             </Pressable>
@@ -156,7 +306,7 @@ const ChiTietChuongScreen = (props) => {
                                         currentIndex === 0 ?
                                             <View />
                                             :
-                                            <Pressable style={styles.truocMoreBottom} onPress={() => navigation.replace('ChiTietChuongScreen', { id: listChuongByIdTruyen[currentIndex - 1].id, index: currentIndex - 1 })}>
+                                            <Pressable style={styles.truocMoreBottom} onPress={() => { addLuotXem(listChuongByIdTruyen[currentIndex - 1].id); navigation.replace('ChiTietChuongScreen', { id: listChuongByIdTruyen[currentIndex - 1].id, index: currentIndex - 1 }) }}>
                                                 <Text style={styles.texTruocMoreBottom}>Sau</Text>
                                                 <AntDesign name="right" size={20} color="tomato" />
                                             </Pressable>
@@ -174,7 +324,7 @@ const ChiTietChuongScreen = (props) => {
                                             </Pressable>
                                     }
 
-                                    <Pressable style={styles.truocMoreBottom}>
+                                    <Pressable style={styles.truocMoreBottom} onPress={() => onBinhLuan()}>
                                         <FontAwesome name="commenting-o" size={24} color="tomato" />
                                     </Pressable>
                                 </View>
@@ -196,21 +346,56 @@ const ChiTietChuongScreen = (props) => {
 
             <Modal animationType="fade" visible={isShowModal} onDismiss={() => setIsShowModal(false)}>
                 <View style={styles.modalChap}>
-                    <ScrollView>
-                        {listChuongByIdTruyen.map((item, index) => (
-                            // <Pressable style={styles.itemChuong} key={item.id} onPress={() => navigation.push('ChiTietChuongScreen', { id: item.id, key: `ChiTietChuongScreen${item.id}` })}>
-
-                            <Pressable style={styles.itemChuong} key={item.id} onPress={() => navigation.replace('ChiTietChuongScreen', { id: item.id, index: index })}>
-                                <RadioButton
-                                    value={item.id}
-                                    status={selectedValue === item.id ? 'checked' : 'unchecked'}
-                                    onPress={() => setSelectedValue(item.id)}
-                                />
-                                <Text style={styles.textTenChuong} key={item.id}>{item.tenchuong}</Text>
-                            </Pressable>
-                        ))}
-                    </ScrollView>
+                    <FlatList
+                        ref={flatListRef}
+                        data={listChuongByIdTruyen}
+                        renderItem={renderItemModal}
+                        keyExtractor={(item) => item.id}
+                        getItemLayout={(listChuongByIdTruyen, index) => ({
+                            length: 40,
+                            offset: 40 * index,
+                            index,
+                        })}>
+                    </FlatList>
                 </View>
+            </Modal>
+
+            <Modal animationType="fade" visible={isShowModal2} onDismiss={() => setIsShowModal2(false)}>
+
+                <View style={styles.modalBinhLuan}>
+                    <View style={styles.boxTongBinhLuan}>
+                        <Text style={styles.textTongBinhLuan}>{tongBinhLuan} bình luận</Text>
+                        <Pressable style={styles.iconOutModalBL} onPress={() => setIsShowModal2(false)}>
+                            <Feather name="x" size={24} color="#555" />
+
+                        </Pressable>
+                    </View>
+                    <FlatList
+                        data={listBinhLuan}
+                        renderItem={renderItemModal2}
+                        keyExtractor={(item) => item.id}
+                    />
+                    <View style={styles.lineItemChuong} />
+                    <View style={styles.boxInput}>
+                        <Image
+                            source={{ uri: nguoidung.avatar }}
+                            style={styles.imageTaiKhoan} />
+                        <TextInput
+                            style={styles.textInputBinhLuan}
+                            placeholder='Thêm bình luận'
+                            cursorColor={'#777'}
+                            placeholderTextColor={'#777'}
+                            onChangeText={text => setNoiDungBinhLuan(text)}
+                            value={noiDungBinhLuan}
+                            multiline={true}
+                            numberOfLines={4} />
+                        <Pressable style={styles.iconSend} onPress={() => addBinhLuan()}>
+                            <MaterialCommunityIcons name="send" size={24} color="tomato" />
+                        </Pressable>
+                    </View>
+
+                </View>
+
             </Modal>
 
         </View>
@@ -220,6 +405,124 @@ const ChiTietChuongScreen = (props) => {
 export default ChiTietChuongScreen
 
 const styles = StyleSheet.create({
+    textNoiDungNBL: {
+        fontSize: 15,
+        fontWeight: '400',
+        color: '#222',
+        width: '70%',
+    },
+    textNgayBinhLuan: {
+        width: '30%',
+        textAlign: 'right',
+        fontSize: 12,
+        fontWeight: '400',
+        color: '#777',
+        fontStyle: 'italic',
+    },
+    textTenNguoiBinhLuan: {
+        fontSize: 15,
+        fontWeight: '600',
+        color: '#222',
+        width: '60%',
+    },
+    boxTenVaNgay: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '75%',
+    },
+    boxTTBinhLuan: {
+        width: '100%',
+        marginLeft: 20,
+    },
+    imageItemModalBinhLuan: {
+        width: 50,
+        height: 50,
+        borderRadius: 30,
+    },
+    itemModalBinhLuan: {
+        marginHorizontal: 10,
+        flexDirection: 'row',
+        marginVertical: 16,
+    },
+    iconSend: {
+        position: 'absolute',
+        right: 0,
+    },
+    boxInput: {
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        borderBottomEndRadius: 6,
+        borderBottomStartRadius: 6,
+        marginHorizontal: 10,
+        alignItems: 'center',
+        maxHeight: 120,
+    },
+    textInputBinhLuan: {
+        marginRight: 20,
+        marginLeft: 20,
+        width: '73%',
+        fontSize: 15,
+        fontWeight: '400',
+        color: '#222',
+        lineHeight: 25,
+    },
+    imageTaiKhoan: {
+        width: 50,
+        height: 50,
+        borderRadius: 30,
+    },
+    iconOutModalBL: {
+        position: 'absolute',
+        right: 0,
+    },
+    textTongBinhLuan: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#222',
+        lineHeight: 23,
+    },
+    boxTongBinhLuan: {
+        marginHorizontal: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 50,
+    },
+    modalBinhLuan: {
+        backgroundColor: '#FFFAFA',
+        width: '95%',
+        maxHeight: '90%',
+        alignSelf: 'center',
+        minHeight: '50%',
+        borderRadius: 6,
+
+    },
+    lineItemChuong: {
+        width: '100%',
+        height: 1.5,
+        backgroundColor: 'grey',
+        opacity: 0.2
+        // elevation: 2,
+    },
+    pointRadioButton: {
+        width: 16,
+        height: 16,
+        borderWidth: 1.5,
+        borderRadius: 30,
+        backgroundColor: 'tomato',
+        borderColor: 'grey',
+
+    },
+    boxRadioButton: {
+        width: 24,
+        height: 24,
+        borderWidth: 1.5,
+        borderColor: 'grey',
+        borderRadius: 30,
+        marginLeft: 10,
+        // marginRight: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     textTenChuong: {
         // backgroundColor: 'red',
         width: '85%',
@@ -227,12 +530,18 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         color: 'black',
         lineHeight: 23,
+        // backgroundColor: 'red'
     },
     itemChuong: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        marginVertical: 6,
+        marginVertical: 16,
+        marginHorizontal: 10,
+        // alignSelf: 'center',
+        // borderBottomWidth: 1,
+
+
     },
     modalChap: {
         width: '90%',
@@ -241,8 +550,8 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         alignSelf: 'center',
         borderRadius: 10,
-        paddingVertical: 10,
-
+        // paddingVertical: 10,
+        minHeight: '30%'
     },
     iconShow: {
         position: 'absolute',

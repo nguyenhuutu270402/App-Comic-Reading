@@ -2,12 +2,14 @@ import { StyleSheet, Text, View, Image, Pressable, FlatList, ToastAndroid, Alert
 import React, { useContext, useEffect, useState } from 'react';
 import { Modal } from 'react-native-paper';
 import { ApiContext } from '../contexts/ApiContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo } from '@expo/vector-icons';
+import moment from 'moment';
 const ChiTietScreen = (props) => {
     const { navigation, route: { params: { id } } } = props;
     const { onGetOneTruyenById, onGetListChuongByIdTruyen,
         onGetListTheLoaiByIdTruyen, onGetListTacGiaByIdTruyen,
-        onAddTheoDoi, onKiemTraTheoDoi, onDeleteTheoDoi,
+        onAddTheoDoi, onKiemTraTheoDoi, onDeleteTheoDoi, onAddLuotXem,
         onAddDanhGia, onKiemTraDanhGia, onUpdateDanhGia } = useContext(ApiContext);
 
     const [kiemTraTheoDoi, setKiemTraTheoDoi] = useState(false);
@@ -19,32 +21,58 @@ const ChiTietScreen = (props) => {
     const [listChuongByIdTruyen, setListChuongByIdTruyen] = useState([]);
     const [listTheLoaiByIdTruyen, setListTheLoaiByIdTruyen] = useState([]);
     const [listTacGiaByIdTruyen, setListTacGiaByIdTruyen] = useState([]);
+    const [nguoidung, setNguoidung] = useState({});
+    const [isLogin, setIsLogin] = useState(false);
+    const [isRefresh, setIsRefresh] = useState(false);
+
 
     async function fetchData() {
         try {
-            const response1 = await onGetOneTruyenById(id);
+            AsyncStorage.getItem('nguoidung')
+                .then(async value => {
+                    const myObject = JSON.parse(value);
+                    setNguoidung(myObject);
+                    if (myObject == null) {
+                        setIsLogin(false);
+                    } else {
+                        setIsLogin(true);
+                        const response5 = await onKiemTraTheoDoi(myObject.id, id);
+                        const response6 = await onKiemTraDanhGia(myObject.id, id);
+                        setKiemTraTheoDoi(response5.results);
+                        setKiemTraDanhGia(response6.results);
+                        if (response6.results != false) {
+                            setRating(response6.danhgia.sosao);
+                        }
+                    }
+                });
+
             const response2 = await onGetListChuongByIdTruyen(id);
             const response3 = await onGetListTheLoaiByIdTruyen(id);
             const response4 = await onGetListTacGiaByIdTruyen(id);
-            const response5 = await onKiemTraTheoDoi(4, id);
-            const response6 = await onKiemTraDanhGia(4, id);
-
-            setOneTruyen(response1.results);
             setListChuongByIdTruyen(response2.results);
             setListTheLoaiByIdTruyen(response3.results);
             setListTacGiaByIdTruyen(response4.results);
-            setKiemTraTheoDoi(response5.results);
-            setKiemTraDanhGia(response6.results);
-            if (kiemTraDanhGia != false) {
-                setRating(response6.danhgia.sosao);
-            }
         } catch (error) {
             console.error(error);
         }
     }
     useEffect(() => {
         fetchData();
-    }, [id, kiemTraTheoDoi, kiemTraDanhGia]);
+    }, [id]);
+
+    async function fetchData2() {
+        try {
+            const response1 = await onGetOneTruyenById(id);
+            setOneTruyen(response1.results);
+        } catch (error) {
+            console.error(error);
+        }
+
+    }
+    useEffect(() => {
+        fetchData2();
+
+    }, [isRefresh])
 
     const onFormatDate = (date) => {
         var d = new Date(date);
@@ -100,28 +128,43 @@ const ChiTietScreen = (props) => {
     }
 
     const deleteTheoDoi = async () => {
-        const response = await onDeleteTheoDoi(4, id);
+        if (isLogin == false) {
+            ToastAndroid.show('Đăng nhập để sử dụng chức năng này', ToastAndroid.CENTER);
+            return;
+        }
+        const response = await onDeleteTheoDoi(nguoidung.id, id);
         if (response.results) {
             setKiemTraTheoDoi(false);
             ToastAndroid.show('Bỏ theo dõi thành công', ToastAndroid.CENTER);
-        }
+            setIsRefresh(!isRefresh);
 
+        }
     }
 
     const addTheoDoi = async () => {
-        const response = await onAddTheoDoi(4, id);
+        if (isLogin == false) {
+            ToastAndroid.show('Đăng nhập để sử dụng chức năng này', ToastAndroid.CENTER);
+            return;
+        }
+        const response = await onAddTheoDoi(nguoidung.id, id);
         setKiemTraTheoDoi(true);
         ToastAndroid.show('Theo dõi thành công', ToastAndroid.CENTER);
+        setIsRefresh(!isRefresh);
 
     }
     const addDanhGia = async () => {
+        if (isLogin == false) {
+            ToastAndroid.show('Đăng nhập để sử dụng chức năng này', ToastAndroid.CENTER);
+            return;
+        }
         if (kiemTraDanhGia == false) {
-            const response = await onAddDanhGia(4, id, rating);
+            const response = await onAddDanhGia(nguoidung.id, id, rating);
         } else if (kiemTraDanhGia != false) {
-            const response = await onUpdateDanhGia(4, id, rating);
+            const response = await onUpdateDanhGia(nguoidung.id, id, rating);
         }
         setIsShowModal(false);
-        setKiemTraDanhGia(false);
+        setKiemTraDanhGia(true);
+        setIsRefresh(!isRefresh);
         ToastAndroid.show('Đánh giá thành công', ToastAndroid.CENTER);
     }
 
@@ -138,6 +181,19 @@ const ChiTietScreen = (props) => {
                 { text: "Có", onPress: () => deleteTheoDoi() }
             ]
         );
+
+    const addLuotXem = async (idChuong) => {
+        let date = new Date();
+        moment.locale('vi');
+        let formattedDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
+        if (isLogin == false) {
+            const response = await onAddLuotXem(1, idChuong, formattedDate);
+            setIsRefresh(!isRefresh);
+        } else {
+            const response = await onAddLuotXem(nguoidung.id, idChuong, formattedDate);
+            setIsRefresh(!isRefresh);
+        }
+    }
 
     const renderHeader = () => {
         return (
@@ -162,7 +218,7 @@ const ChiTietScreen = (props) => {
                     </View>
                     <View style={styles.boxTacGia}>
                         {listTacGiaByIdTruyen.map((item, index) => (
-                            <Pressable key={index} style={styles.itemTacGia} onPress={() => navigation.navigate('TimKiemScreen', { id: item.id })}>
+                            <Pressable key={index} style={styles.itemTacGia} onPress={() => navigation.navigate('TruyenTheoLoaiScreen', { tacgia: item, theloai: null })}>
                                 <Text style={styles.textAPITenTacGia}>
                                     {item.tentacgia}
                                     {index === listTacGiaByIdTruyen.length - 1 ? '' : ' - '}
@@ -186,7 +242,7 @@ const ChiTietScreen = (props) => {
                     </View>
                     <View style={styles.boxTacGia}>
                         {listTheLoaiByIdTruyen.map((item, index) => (
-                            <Pressable key={index} style={styles.itemTacGia} onPress={() => navigation.navigate('TimKiemScreen', { id: item.id })}>
+                            <Pressable key={index} style={styles.itemTacGia} onPress={() => navigation.navigate('TruyenTheoLoaiScreen', { tacgia: null, theloai: item })}>
                                 <Text style={styles.textAPITenTacGia}>
                                     {item.tentheloai}
                                     {index === listTheLoaiByIdTruyen.length - 1 ? '' : ' - '}
@@ -268,7 +324,7 @@ const ChiTietScreen = (props) => {
         )
     }
     const renderItem = ({ item, index }) => (
-        <Pressable key={item.id} onPress={() => navigation.navigate('ChiTietChuongScreen', { id: item.id, index: index })}>
+        <Pressable key={item.id} onPress={() => { addLuotXem(item.id); navigation.navigate('ChiTietChuongScreen', { id: item.id, index: index }) }}>
             <View style={styles.boxChuongItem}>
                 <View style={styles.boxTextChuongItem}>
                     <Text style={styles.textTenChuongItem}>Chapter {item.sochuong}</Text>

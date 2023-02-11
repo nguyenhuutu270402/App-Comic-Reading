@@ -3,13 +3,78 @@ import {
     getTop10Truyen, get3Chuong, getAllTruyen, getListChuongByIdTruyen,
     getOneTruyenById, getListTheLoaiByIdTruyen, getListTacGiaByIdTruyen,
     addTheoDoi, kiemTraTheoDoi, deleteTheoDoi, addDanhGia, kiemTraDanhGia,
-    updateDanhGia, getListImageChuongByIdChuong, getOneChuongById
+    updateDanhGia, getListImageChuongByIdChuong, getOneChuongById, loginUser,
+    addUser, checkRegister, addLuotXem, addBinhLuan, getListBinhLuanByIdTruyen,
+    getTongBinhLuanByIdTruyen, layListTruyenTheoLoai
 } from '../services/ApiService';
 
 export const ApiContext = createContext();
 export const ApiContextProvider = (props) => {
     const { children } = props;
 
+
+    const onLayListTruyenTheoLoai = async (lastquery) => {
+        try {
+            const res = await layListTruyenTheoLoai(lastquery);
+            return res;
+        } catch (error) {
+            console.log('onLayListTruyenTheoLoai error: ', error);
+        }
+    }
+
+    const onAddBinhLuan = async (idnguoidung, idtruyen, noidung, ngaybinhluan) => {
+        try {
+            const res = await addBinhLuan(idnguoidung, idtruyen, noidung, ngaybinhluan);
+            return res;
+        } catch (error) {
+            console.log('onAddBinhLuan error: ', error);
+        }
+    }
+
+    const onGetTongBinhLuanByIdTruyen = async (id) => {
+        try {
+            const res = await getTongBinhLuanByIdTruyen(id);
+            return res;
+        } catch (error) {
+            console.log('onGetTongBinhLuanByIdTruyen error: ', error);
+        }
+    }
+
+    const onGetListBinhLuanByIdTruyen = async (id) => {
+        try {
+            const res = await getListBinhLuanByIdTruyen(id);
+            return res;
+        } catch (error) {
+            console.log('onGetListBinhLuanByIdTruyen error: ', error);
+        }
+    }
+
+    const onLoginUser = async (email, matkhau) => {
+        try {
+            const res = await loginUser(email, matkhau);
+            return res;
+        } catch (error) {
+            console.log('onLoginUser error: ', error);
+        }
+    }
+
+    const onAddUser = async (email, matkhau) => {
+        try {
+            const res = await addUser(email, matkhau);
+            return res;
+        } catch (error) {
+            console.log('onAddUser error: ', error);
+        }
+    }
+
+    const onCheckRegister = async (email) => {
+        try {
+            const res = await checkRegister(email);
+            return res;
+        } catch (error) {
+            console.log('checkRegister error: ', error);
+        }
+    }
     // lấy top 10 truyện xem nhiều nhất
     const onGetTop10Truyen = async () => {
         try {
@@ -128,6 +193,15 @@ export const ApiContextProvider = (props) => {
         }
     }
 
+    const onAddLuotXem = async (idnguoidung, idchuong, ngayxem) => {
+        try {
+            const res = await addLuotXem(idnguoidung, idchuong, ngayxem);
+            return res;
+        } catch (error) {
+            console.log('onAddLuotXem error: ', error);
+        }
+    }
+
     const onGetListImageChuongByIdChuong = async (id) => {
         try {
             const res = await getListImageChuongByIdChuong(id);
@@ -152,7 +226,9 @@ export const ApiContextProvider = (props) => {
                 onGetTop10Truyen, onGet3Chuong, onGetAllTruyen, onGetListChuongByIdTruyen,
                 onGetOneTruyenById, onGetListTheLoaiByIdTruyen, onGetListTacGiaByIdTruyen,
                 onAddTheoDoi, onKiemTraTheoDoi, onDeleteTheoDoi, onAddDanhGia, onKiemTraDanhGia,
-                onUpdateDanhGia, onGetListImageChuongByIdChuong, onGetOneChuongById
+                onUpdateDanhGia, onGetListImageChuongByIdChuong, onGetOneChuongById, onLoginUser,
+                onAddUser, onCheckRegister, onAddLuotXem, onAddBinhLuan, onGetListBinhLuanByIdTruyen,
+                onGetTongBinhLuanByIdTruyen, onLayListTruyenTheoLoai
             }}
         >
             {children}

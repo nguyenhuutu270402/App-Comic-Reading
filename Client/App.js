@@ -10,7 +10,7 @@ export default function App() {
     <ApiContextProvider>
       <NavigationContainer>
         <BottomTabNavigator />
-        <StatusBar style="dark" />
+        <StatusBar style="auto" />
       </NavigationContainer>
     </ApiContextProvider>
   );

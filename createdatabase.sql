@@ -1,7 +1,7 @@
 --
 -- alter user 'root'@'localhost' identified with mysql_native_password by 'root123';
--- create database sql12595280;
-use sql12595280;
+create database db_comicreading;
+use db_comicreading;
 CREATE TABLE nguoidung (
 id INT AUTO_INCREMENT PRIMARY KEY,
 email VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -77,6 +77,7 @@ id INT AUTO_INCREMENT PRIMARY KEY,
 idnguoidung INT not null,
 idtruyen INT not null,
 noidung TEXT,
+ngaybinhluan datetime not null,
 FOREIGN KEY (idnguoidung) REFERENCES nguoidung(id),
 FOREIGN KEY (idtruyen) REFERENCES truyen(id)
 );
@@ -720,4 +721,29 @@ INSERT INTO danhgia (idnguoidung, idtruyen, sosao) VALUES
 
 ;
 
-select * from truyen
+
+INSERT INTO binhluan (idnguoidung, idtruyen, noidung, ngaybinhluan) VALUES 
+(4, 1, 'Đỉnh thật sự', now())
+,(2, 1, 'Hay ghê á!!!!!!', now())
+,(3, 1, 'Quá ghê gớm!!!!!!', now())
+,(4, 1, 'Đỉnh thật sự', now())
+,(5, 1, 'Tuyệt vời ông mặt trời :))', now())
+,(1, 2, 'Hay ghê á!!!!!!', now())
+,(2, 3, 'Hay ghê á!!!!!!', now())
+,(3, 4, 'Hay ghê á!!!!!!', now())
+,(4, 5, 'Hay ghê á!!!!!!', now())
+,(5, 6, 'Hay ghê á!!!!!!', now())
+,(1, 7, 'Hay ghê á!!!!!!', now())
+,(2, 8, 'Hay ghê á!!!!!!', now())
+,(3, 9, 'Hay ghê á!!!!!!', now())
+,(4, 10, 'Hay ghê á!!!!!!', now())
+,(5, 11, 'Hay ghê á!!!!!!', now())
+,(1, 12, 'Hay ghê á!!!!!!', now())
+,(2, 13, 'Hay ghê á!!!!!!', now())
+,(3, 14, 'Hay ghê á!!!!!!', now())
+,(4, 15, 'Hay ghê á!!!!!!', now())
+,(5, 16, 'Hay ghê á!!!!!!', now())
+
+;
+
+

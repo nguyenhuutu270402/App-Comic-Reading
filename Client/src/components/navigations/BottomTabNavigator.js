@@ -15,15 +15,15 @@ function BottomTabNavigator() {
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
-
+                    // web tìm icon https://ionic.io/ionicons/
                     if (route.name === 'Trang Chủ') {
                         iconName = focused ? 'ios-home' : 'ios-home-outline';
                     } else if (route.name === 'Theo Dõi') {
                         iconName = focused ? 'ios-heart' : 'ios-heart-outline';
                     } else if (route.name === 'Xếp Hạng') {
                         iconName = focused ? 'ios-trophy' : 'ios-trophy-outline';
-                    } else if (route.name === 'Cài Đặt') {
-                        iconName = focused ? 'ios-settings' : 'ios-settings-outline';
+                    } else if (route.name === 'Danh mục') {
+                        iconName = focused ? 'ios-grid' : 'ios-grid-outline';
                     }
 
                     return <Icon name={iconName} size={size} color={color} />;
@@ -35,16 +35,19 @@ function BottomTabNavigator() {
             })}
         >
             <Tab.Screen name="Trang Chủ" component={TrangChuStack} options={({ route }) => ({ tabBarStyle: { display: getRouteName(route) } })} />
-            <Tab.Screen name="Theo Dõi" component={TheoDoiStack} />
-            <Tab.Screen name="Xếp Hạng" component={XepHangStack} />
-            <Tab.Screen name="Cài Đặt" component={CaiDatStack} />
+            <Tab.Screen name="Xếp Hạng" component={XepHangStack} options={({ route }) => ({ tabBarStyle: { display: getRouteName(route) } })} />
+            <Tab.Screen name="Theo Dõi" component={TheoDoiStack} options={({ route }) => ({ tabBarStyle: { display: getRouteName(route) } })} />
+            <Tab.Screen name="Danh mục" component={CaiDatStack} options={({ route }) => ({ tabBarStyle: { display: getRouteName(route) } })} />
         </Tab.Navigator>
     );
 }
 const getRouteName = route => {
     const routeName = getFocusedRouteNameFromRoute(route);
-    console.log(routeName);
-    if (routeName?.includes("TrangChuScreen") || routeName == undefined) {
+    // console.log(routeName);
+    if (routeName?.includes("TrangChuScreen")
+        || routeName?.includes("XepHangScreen")
+        || routeName?.includes("TheoDoiScreen")
+        || routeName?.includes("CaiDatScreen") || routeName == undefined) {
         return "flex"
     }
     return "none"

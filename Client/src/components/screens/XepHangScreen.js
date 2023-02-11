@@ -9,7 +9,7 @@ const XepHangScreen = (props) => {
         <View style={styles.container}>
             <View style={styles.boxHeader}>
                 <Text style={styles.txtHeader}>Xếp hạng</Text>
-                <Pressable style={styles.boxIconSearch} onPress={() => navigation.navigate('TiemKiemScreen')}>
+                <Pressable style={styles.boxIconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
                     <Ionicons name="ios-search" size={28} color="#222" />
                 </Pressable>
                 <View style={styles.boxHeaderShadow}></View>
@@ -24,13 +24,10 @@ export default XepHangScreen
 
 const styles = StyleSheet.create({
     boxHeaderShadow: {
-        elevation: 2,
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 100 },
-        shadowOpacity: 2,
-        shadowRadius: 10,
-        backgroundColor: 'white',
-        padding: 1,
+        height: 1,
+        backgroundColor: 'black',
+        width: '100%',
+        opacity: 0.1,
     },
     boxIconSearch: {
         position: 'absolute',

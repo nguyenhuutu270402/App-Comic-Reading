@@ -49,6 +49,11 @@ export const addDanhGia = async (idnguoidung, idtruyen, sosao) => {
     const res = await axiosInstance.post(`api/add-danh-gia`, data);
     return res;
 }
+export const addLuotXem = async (idnguoidung, idchuong, ngayxem) => {
+    const data = { idnguoidung, idchuong, ngayxem }
+    const res = await axiosInstance.post(`api/add-luot-xem`, data);
+    return res;
+}
 export const kiemTraDanhGia = async (idnguoidung, idtruyen) => {
     const data = { idnguoidung, idtruyen }
     const res = await axiosInstance.post(`api/kiem-tra-danh-gia`, data);
@@ -67,5 +72,46 @@ export const getListImageChuongByIdChuong = async (id) => {
 
 export const getOneChuongById = async (id) => {
     const res = await axiosInstance.get(`api/get-one-chuong-theo-id-chuong/${id}`);
+    return res;
+}
+
+export const loginUser = async (email, matkhau) => {
+    const data = { email, matkhau }
+    const res = await axiosInstance.post(`api/login`, data);
+    return res;
+}
+
+export const addUser = async (email, matkhau) => {
+    const data = { email, matkhau }
+    const res = await axiosInstance.post(`api/add-user`, data);
+    return res;
+}
+
+export const checkRegister = async (email) => {
+    const data = { email }
+    const res = await axiosInstance.post(`api/check-register`, data);
+    return res;
+}
+
+export const addBinhLuan = async (idnguoidung, idtruyen, noidung, ngaybinhluan) => {
+    const data = { idnguoidung, idtruyen, noidung, ngaybinhluan }
+    const res = await axiosInstance.post(`api/add-binh-luan`, data);
+    return res;
+}
+
+export const getListBinhLuanByIdTruyen = async (id) => {
+    const res = await axiosInstance.get(`api/get-list-binh-luan-theo-id-truyen/${id}`);
+    return res;
+}
+
+export const getTongBinhLuanByIdTruyen = async (id) => {
+    const res = await axiosInstance.get(`api/get-tong-binh-luan-theo-id-truyen/${id}`);
+    return res;
+}
+
+
+export const layListTruyenTheoLoai = async (lastquery) => {
+    const data = { lastquery }
+    const res = await axiosInstance.post(`api/lay-list-truyen-theo-loai`, data);
     return res;
 }

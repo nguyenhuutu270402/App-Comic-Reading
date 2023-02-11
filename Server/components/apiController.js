@@ -24,9 +24,26 @@ const apiController = {
                 if (err) {
                     res.status(500).json({ message: err.message });
                 } else if (results.length > 0) {
-                    res.status(200).json(results[0]);
+                    res.status(200).json({ results: results[0] });
                 } else {
-                    res.status(401).json({ message: 'Email hoặc mật khẩu không chính xác' });
+                    res.status(200).json({ results: false });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    checkRegister: async (req, res) => {
+        try {
+            const { email } = req.body;
+            database.query("SELECT * FROM nguoidung WHERE email = ?", [email], (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else if (results.length > 0) {
+                    res.status(200).json({ results: false });
+                } else {
+                    res.status(200).json({ results: true });
                 }
             });
         } catch (error) {
@@ -110,7 +127,7 @@ const apiController = {
     getOneTruyenById: async (req, res) => {
         try {
             var id = req.params.id;
-            var qr = `SELECT truyen.*, COUNT(DISTINCT luotxem.id) AS 'tongluotxem', COUNT(DISTINCT theodoi.id) AS 'tongtheodoi', COUNT(DISTINCT danhgia.id) AS 'tongdanhgia', AVG(danhgia.sosao)'sosaotrungbinh', MAX(chuong.ngaycapnhat) AS ngaycapnhat, MAX(chuong.sochuong) AS chuongmoinhat FROM truyen INNER JOIN chuong ON truyen.id = chuong.idtruyen LEFT JOIN luotxem ON chuong.id = luotxem.idchuong LEFT JOIN theodoi ON truyen.id = theodoi.idtruyen LEFT JOIN danhgia ON truyen.id = danhgia.idtruyen where truyen.id = ${id} GROUP BY truyen.id ORDER BY MAX(chuong.ngaycapnhat) DESC`;
+            var qr = `SELECT truyen.*, COUNT(DISTINCT luotxem.id) AS 'tongluotxem', COUNT(DISTINCT theodoi.id) AS 'tongtheodoi', COUNT(DISTINCT danhgia.id) AS 'tongdanhgia', COUNT(DISTINCT binhluan.id) AS 'tongbinhluan', AVG(danhgia.sosao)'sosaotrungbinh', MAX(chuong.ngaycapnhat) AS ngaycapnhat, MAX(chuong.sochuong) AS chuongmoinhat FROM truyen INNER JOIN chuong ON truyen.id = chuong.idtruyen LEFT JOIN luotxem ON chuong.id = luotxem.idchuong LEFT JOIN theodoi ON truyen.id = theodoi.idtruyen LEFT JOIN danhgia ON truyen.id = danhgia.idtruyen LEFT JOIN binhluan ON truyen.id = binhluan.idtruyen where truyen.id = ${id} GROUP BY truyen.id ORDER BY MAX(chuong.ngaycapnhat) DESC`;
             database.query(qr, (err, results) => {
                 if (err) {
                     res.status(500).json({ message: err.message });
@@ -233,6 +250,21 @@ const apiController = {
         }
     },
 
+    addLuotXem: async (req, res) => {
+        try {
+            const { idnguoidung, idchuong, ngayxem } = req.body;
+            database.query("INSERT INTO luotxem (idnguoidung, idchuong, ngayxem) VALUES (?, ?, ?)", [idnguoidung, idchuong, ngayxem], (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.status(200).json({ insertId: results.insertId });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
     kiemTraDanhGia: async (req, res) => {
         try {
             const { idnguoidung, idtruyen } = req.body;
@@ -290,6 +322,104 @@ const apiController = {
                     res.status(500).json({ message: err.message });
                 } else {
                     res.status(200).json({ results: results[0] });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    getListBinhLuanByIdTruyen: async (req, res) => {
+        try {
+            var idTruyen = req.params.idTruyen;
+            var qr = `SELECT binhluan.*, nguoidung.tennguoidung, nguoidung.avatar FROM binhluan left JOIN truyen ON binhluan.idtruyen = truyen.id left JOIN nguoidung ON binhluan.idnguoidung = nguoidung.id where idtruyen = ${idTruyen} ORDER BY binhluan.ngaybinhluan DESC;
+            `;
+            database.query(qr, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.status(200).json({ results: results });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    addBinhLuan: async (req, res) => {
+        try {
+            const { idnguoidung, idtruyen, noidung, ngaybinhluan } = req.body;
+            database.query("INSERT INTO binhluan (idnguoidung, idtruyen, noidung, ngaybinhluan) VALUES (?, ?, ?, ?)", [idnguoidung, idtruyen, noidung, ngaybinhluan], (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.status(200).json({ insertId: results.insertId });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    getTongBinhLuanByIdTruyen: async (req, res) => {
+        try {
+            var idTruyen = req.params.idTruyen;
+            var qr = `select COUNT(DISTINCT binhluan.id) AS 'tongbinhluan' from binhluan where binhluan.idtruyen = ${idTruyen};`
+            database.query(qr, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.status(200).json({ results: results[0].tongbinhluan });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    getListTruyenTheoLoai: async (req, res) => {
+        try {
+            const { lastquery } = req.body;
+            database.query("INSERT INTO binhluan (idnguoidung, idtruyen, noidung, ngaybinhluan) VALUES (?, ?, ?, ?)", [idnguoidung, idtruyen, noidung, ngaybinhluan], (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.status(200).json({ insertId: results.insertId });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+
+
+    layListTruyenTheoLoai: async (req, res) => {
+        try {
+            const { lastquery } = req.body;
+            var qr = `SELECT truyen.id,
+            truyen.tentruyen,
+            truyen.imagelink, 
+                COUNT(DISTINCT luotxem.id) AS 'tongluotxem', 
+                COUNT(DISTINCT theodoi.id) AS 'tongtheodoi',
+                COUNT(DISTINCT danhgia.id) AS 'tongdanhgia',
+                AVG(danhgia.sosao)'sosaotrungbinh',
+                MAX(chuong.ngaycapnhat) AS ngaycapnhat,
+                MAX(chuong.sochuong) AS chuongmoinhat
+            FROM truyen
+            INNER JOIN chuong ON truyen.id = chuong.idtruyen
+            LEFT JOIN ct_theloai ON truyen.id = ct_theloai.idtruyen
+            LEFT JOIN theloai ON ct_theloai.idtheloai = theloai.id
+            LEFT JOIN ct_tacgia ON truyen.id = ct_tacgia.idtruyen
+            LEFT JOIN tacgia ON ct_tacgia.idtacgia = tacgia.id
+            LEFT JOIN luotxem ON chuong.id = luotxem.idchuong
+            LEFT JOIN theodoi ON truyen.id = theodoi.idtruyen
+            LEFT JOIN danhgia ON truyen.id = danhgia.idtruyen ` + lastquery;
+            database.query(qr, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.status(200).json({ results: results });
                 }
             });
         } catch (error) {

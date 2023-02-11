@@ -243,9 +243,9 @@ const styles = StyleSheet.create({
     },
     boxHeaderShadow: {
         height: 1,
-        backgroundColor: 'grey',
+        backgroundColor: 'black',
         width: '100%',
-        opacity: 0.2
+        opacity: 0.1,
     },
     boxIconSearch: {
         position: 'absolute',
