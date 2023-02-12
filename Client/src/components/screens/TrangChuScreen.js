@@ -106,7 +106,7 @@ const TrangChuScreen = (props) => {
             {/* box ten trang va nut tim kiem */}
             <View style={styles.boxHeader}>
                 <Text style={styles.txtHeader}>Trang chủ</Text>
-                <Pressable style={styles.boxIconSearch} onPress={() => navigation.navigate('TiemKiemScreen')}>
+                <Pressable style={styles.boxIconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
                     <Ionicons name="ios-search" size={28} color="#222" />
                 </Pressable>
             </View>

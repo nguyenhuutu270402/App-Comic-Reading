@@ -32,9 +32,6 @@ const TruyenTheoLoaiScreen = (props) => {
             id: 5,
             swap: 'Đánh giá',
         },
-
-
-
     ]
 
     async function fetchData() {
@@ -245,8 +242,8 @@ const TruyenTheoLoaiScreen = (props) => {
                 <View style={styles.modalChap}>
                     {listSwap.map(item => {
                         return (
-                            <View>
-                                <Pressable style={styles.itemChuong} key={item.id} onPress={() => onSwapType(item.id)}>
+                            <View key={item.id}>
+                                <Pressable style={styles.itemChuong} onPress={() => onSwapType(item.id)}>
 
                                     <Text style={styles.textTenChuong}>{item.swap}</Text>
                                     <View style={styles.boxRadioButton}>
