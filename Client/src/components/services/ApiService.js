@@ -93,6 +93,18 @@ export const checkRegister = async (email) => {
     return res;
 }
 
+export const updateUser = async (tennguoidung, avatar, id) => {
+    const data = { tennguoidung, avatar, id }
+    const res = await axiosInstance.post(`api/update-user`, data);
+    return res;
+}
+
+export const updatePasswordUser = async (matkhau, id) => {
+    const data = { matkhau, id }
+    const res = await axiosInstance.post(`api/update-password-user`, data);
+    return res;
+}
+
 export const addBinhLuan = async (idnguoidung, idtruyen, noidung, ngaybinhluan) => {
     const data = { idnguoidung, idtruyen, noidung, ngaybinhluan }
     const res = await axiosInstance.post(`api/add-binh-luan`, data);

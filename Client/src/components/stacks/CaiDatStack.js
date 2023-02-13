@@ -12,6 +12,7 @@ import TheLoaiScreen from '../screens/TheLoaiScreen';
 import TimTruyenScreen from '../screens/TimTruyenScreen';
 import ChiTietChuongScreen from '../screens/ChiTietChuongScreen';
 import TruyenTheoLoaiScreen from '../screens/TruyenTheoLoaiScreen';
+import DoiMatKhauScreen from '../screens/DoiMatKhauScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,8 @@ const CaiDatStack = () => {
             <Stack.Screen name='TimTruyenScreen' component={TimTruyenScreen} />
             <Stack.Screen name='ChiTietChuongScreen' component={ChiTietChuongScreen} />
             <Stack.Screen name='TruyenTheoLoaiScreen' component={TruyenTheoLoaiScreen} />
+            <Stack.Screen name='DoiMatKhauScreen' component={DoiMatKhauScreen} />
+
 
 
 

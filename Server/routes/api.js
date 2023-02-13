@@ -11,6 +11,10 @@ router.post('/login', apiController.loginUser);
 
 router.post('/check-register', apiController.checkRegister);
 
+router.post('/update-user', apiController.updateUser);
+
+router.post('/update-password-user', apiController.updatePasswordUser);
+
 router.get('/get-all-truyen', apiController.getAllTruyen);
 
 router.get('/get-top10-truyen', apiController.getTop10Truyen);

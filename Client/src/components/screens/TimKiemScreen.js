@@ -140,6 +140,7 @@ const TimKiemScreen = (props) => {
 
 
     }
+
     const onSearch = async (text) => {
         clearTimeout(timeout.current);
         timeout.current = setTimeout(async () => {

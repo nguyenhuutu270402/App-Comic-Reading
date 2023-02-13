@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, FlatList, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, Pressable, FlatList, Dimensions, RefreshControl } from 'react-native';
 import { ApiContext } from '../contexts/ApiContext';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -10,14 +10,13 @@ const TrangChuScreen = (props) => {
     const [top10Truyen, setTop10Truyen] = useState([]);
     const [allTruyen, setAllTruyen] = useState([]);
 
+    async function fetchData() {
+        const response = await onGetTop10Truyen();
+        const response2 = await onGetAllTruyen();
+        setAllTruyen(response2.results);
+        setTop10Truyen(response.results);
+    }
     useEffect(() => {
-        async function fetchData() {
-            const response = await onGetTop10Truyen();
-            const response2 = await onGetAllTruyen();
-            setAllTruyen(response2.results);
-            setTop10Truyen(response.results);
-        }
-
         fetchData();
     }, []);
 
@@ -99,6 +98,17 @@ const TrangChuScreen = (props) => {
         </Pressable>
     );
 
+
+    // reload
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = () => {
+        setRefreshing(true);
+        // Fetch your data here and then set refreshing to false
+        fetchData();
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 2000);
+    };
     return (
 
 
@@ -119,6 +129,9 @@ const TrangChuScreen = (props) => {
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
                 numColumns={3}
+                refreshControl={
+                    < RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
             />
         </View>
 

@@ -69,7 +69,7 @@ const CaiDatScreen = (props) => {
                         isLogin === false ?
                             <Text style={styles.textChuaDangNhap}>Chưa đăng nhập</Text>
                             :
-                            <Pressable style={styles.boxImageTenEmail} onPress={() => navigation.navigate('TaiKhoanScreen')}>
+                            <Pressable style={styles.boxImageTenEmail} onPress={() => navigation.replace('TaiKhoanScreen')}>
                                 {
                                     nguoidung.avatar === null ?
                                         <Ionicons name="person-circle-outline" size={50} color="#3333FF" />
@@ -118,19 +118,30 @@ const CaiDatScreen = (props) => {
                         </Pressable>
                         {
                             isLogin === true ?
-                                <Pressable onPress={() => onAlertDangXuat()}>
-                                    <View style={styles.boxItem}>
-                                        <Feather name="log-out" size={24} color="#CC0000" />
-                                        <Text style={styles.textItem}>Đăng xuất</Text>
-                                    </View>
-                                </Pressable>
+                                <View>
+
+                                    <Pressable onPress={() => navigation.navigate('DoiMatKhauScreen')}>
+                                        <View style={styles.boxItem}>
+                                            <MaterialCommunityIcons name="key-change" size={22} color="#3333FF" />
+                                            <Text style={styles.textItem}>Đổi mật khẩu</Text>
+                                        </View>
+                                    </Pressable>
+                                    <Pressable onPress={() => onAlertDangXuat()}>
+                                        <View style={styles.boxItem}>
+                                            <Feather name="log-out" size={24} color="#CC0000" />
+                                            <Text style={styles.textItem}>Đăng xuất</Text>
+                                        </View>
+                                    </Pressable>
+                                </View>
+
                                 :
-                                <Pressable onPress={() => navigation.navigate('DangNhapScreen')}>
+                                <Pressable onPress={() => navigation.replace('DangNhapScreen')}>
                                     <View style={styles.boxItem}>
                                         <Feather name="log-in" size={24} color="#3333FF" />
                                         <Text style={styles.textItem}>Đăng nhập</Text>
                                     </View>
                                 </Pressable>
+
                         }
                     </View>
                 </View>

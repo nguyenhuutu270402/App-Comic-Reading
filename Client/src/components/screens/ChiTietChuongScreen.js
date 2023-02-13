@@ -377,9 +377,16 @@ const ChiTietChuongScreen = (props) => {
                     />
                     <View style={styles.lineItemChuong} />
                     <View style={styles.boxInput}>
-                        <Image
-                            source={{ uri: nguoidung.avatar }}
-                            style={styles.imageTaiKhoan} />
+
+                        {
+                            isLogin !== false ?
+                                <Image
+                                    source={{ uri: nguoidung.avatar }}
+                                    style={styles.imageTaiKhoan} />
+                                :
+                                <View />
+                        }
+
                         <TextInput
                             style={styles.textInputBinhLuan}
                             placeholder='Thêm bình luận'
@@ -438,6 +445,7 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 30,
+        resizeMode: 'cover',
     },
     itemModalBinhLuan: {
         marginHorizontal: 10,

@@ -30,7 +30,7 @@ const DangNhapScreen = (props) => {
 
             <View style={styles.container}>
                 <Image style={styles.background} source={require('../../assets/images/bglogin2.png')} />
-                <Pressable style={styles.boxIconBack} onPress={() => navigation.pop()}>
+                <Pressable style={styles.boxIconBack} onPress={() => navigation.replace('CaiDatScreen')}>
                     <Ionicons name="arrow-back-circle" size={30} color="white" />
                 </Pressable>
                 <Text style={styles.textDangNhap}>Đăng nhập</Text>

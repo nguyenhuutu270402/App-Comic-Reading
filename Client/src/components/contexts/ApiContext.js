@@ -5,13 +5,30 @@ import {
     addTheoDoi, kiemTraTheoDoi, deleteTheoDoi, addDanhGia, kiemTraDanhGia,
     updateDanhGia, getListImageChuongByIdChuong, getOneChuongById, loginUser,
     addUser, checkRegister, addLuotXem, addBinhLuan, getListBinhLuanByIdTruyen,
-    getTongBinhLuanByIdTruyen, layListTruyenTheoLoai
+    getTongBinhLuanByIdTruyen, layListTruyenTheoLoai, updateUser, updatePasswordUser,
 } from '../services/ApiService';
 
 export const ApiContext = createContext();
 export const ApiContextProvider = (props) => {
     const { children } = props;
 
+    const onUpdateUser = async (tennguoidung, avatar, id) => {
+        try {
+            const res = await updateUser(tennguoidung, avatar, id);
+            return res;
+        } catch (error) {
+            console.log('onUpdateUser error: ', error);
+        }
+    }
+
+    const onUpdatePasswordUser = async (matkhau, id) => {
+        try {
+            const res = await updatePasswordUser(matkhau, id);
+            return res;
+        } catch (error) {
+            console.log('onUpdatePasswordUser error: ', error);
+        }
+    }
 
     const onLayListTruyenTheoLoai = async (lastquery) => {
         try {
@@ -228,7 +245,7 @@ export const ApiContextProvider = (props) => {
                 onAddTheoDoi, onKiemTraTheoDoi, onDeleteTheoDoi, onAddDanhGia, onKiemTraDanhGia,
                 onUpdateDanhGia, onGetListImageChuongByIdChuong, onGetOneChuongById, onLoginUser,
                 onAddUser, onCheckRegister, onAddLuotXem, onAddBinhLuan, onGetListBinhLuanByIdTruyen,
-                onGetTongBinhLuanByIdTruyen, onLayListTruyenTheoLoai
+                onGetTongBinhLuanByIdTruyen, onLayListTruyenTheoLoai, onUpdateUser, onUpdatePasswordUser
             }}
         >
             {children}
