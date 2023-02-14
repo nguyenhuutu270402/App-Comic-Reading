@@ -100,6 +100,25 @@ CREATE TABLE danhgia (
   FOREIGN KEY (idtruyen) REFERENCES truyen (id)
 );
 
+CREATE TABLE lichsu (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  idnguoidung INT not null,
+  idtruyen INT not null,
+  idchuong INT not null,
+  ngayxemgannhat datetime not null,
+  FOREIGN KEY (idnguoidung) REFERENCES nguoidung (id),
+  FOREIGN KEY (idtruyen) REFERENCES truyen (id),
+  FOREIGN KEY (idchuong) REFERENCES chuong (id)
+);
+
+CREATE TABLE lichsuxemchuong (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  idnguoidung INT not null,
+  idchuong INT not null,
+  FOREIGN KEY (idnguoidung) REFERENCES nguoidung(id),
+  FOREIGN KEY (idchuong) REFERENCES chuong(id)
+);
+
 INSERT INTO nguoidung (email, matkhau, tennguoidung, avatar, phanquyen) VALUES 
 ('example1@gmail.com', 'password123', 'User 1', 'https://giaydantuonganhtuan.vn/upload_images/images/ANI%20-%20103.jpg', '0')
 ,('example2@gmail.com', 'password123', 'User 2', 'https://giaydantuonganhtuan.vn/upload_images/images/ANI%20-%20103.jpg', '0')
@@ -743,7 +762,10 @@ INSERT INTO binhluan (idnguoidung, idtruyen, noidung, ngaybinhluan) VALUES
 ,(3, 14, 'Hay ghê á!!!!!!', now())
 ,(4, 15, 'Hay ghê á!!!!!!', now())
 ,(5, 16, 'Hay ghê á!!!!!!', now())
-
 ;
 
-
+INSERT INTO lichsu (idnguoidung, idtruyen, idchuong, ngayxemgannhat) 
+VALUES 
+(2, 1, 4, '2022-12-01 12:00:00')
+,(2, 2, 6, '2022-12-04 12:00:00')
+;

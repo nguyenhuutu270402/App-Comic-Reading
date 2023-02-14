@@ -6,11 +6,48 @@ import {
     updateDanhGia, getListImageChuongByIdChuong, getOneChuongById, loginUser,
     addUser, checkRegister, addLuotXem, addBinhLuan, getListBinhLuanByIdTruyen,
     getTongBinhLuanByIdTruyen, layListTruyenTheoLoai, updateUser, updatePasswordUser,
+    kiemTraLichSu, kiemTraLichSuXemChuong, getListLichSuTheoIdNguoiDung, getListTheLoai,
+    deleteLichSu
 } from '../services/ApiService';
 
 export const ApiContext = createContext();
 export const ApiContextProvider = (props) => {
     const { children } = props;
+
+    const onGetListLichSuTheoIdNguoiDung = async (id) => {
+        try {
+            const res = await getListLichSuTheoIdNguoiDung(id);
+            return res;
+        } catch (error) {
+            console.log('onGetListLichSuTheoIdNguoiDung error: ', error);
+        }
+    }
+    const onGetListTheLoai = async () => {
+        try {
+            const res = await getListTheLoai();
+            return res;
+        } catch (error) {
+            console.log('onGetListTheLoai error: ', error);
+        }
+    }
+
+    const onKiemTraLichSuXemChuong = async (idnguoidung, idchuong) => {
+        try {
+            const res = await kiemTraLichSuXemChuong(idnguoidung, idchuong);
+            return res;
+        } catch (error) {
+            console.log('onKiemTraLichSuXemChuong error: ', error);
+        }
+    }
+
+    const onKiemTraLichSu = async (idnguoidung, idtruyen, idchuong, ngayxemgannhat) => {
+        try {
+            const res = await kiemTraLichSu(idnguoidung, idtruyen, idchuong, ngayxemgannhat);
+            return res;
+        } catch (error) {
+            console.log('onKiemTraLichSu error: ', error);
+        }
+    }
 
     const onUpdateUser = async (tennguoidung, avatar, id) => {
         try {
@@ -120,9 +157,9 @@ export const ApiContextProvider = (props) => {
         }
     }
 
-    const onGetListChuongByIdTruyen = async (id) => {
+    const onGetListChuongByIdTruyen = async (idTruyen, idNguoiDung) => {
         try {
-            const res = await getListChuongByIdTruyen(id);
+            const res = await getListChuongByIdTruyen(idTruyen, idNguoiDung);
             return res;
         } catch (error) {
             console.log('onGetListChuongByIdTruyen error: ', error);
@@ -171,6 +208,15 @@ export const ApiContextProvider = (props) => {
             return res;
         } catch (error) {
             console.log('onKiemTraTheoDoi error: ', error);
+        }
+    }
+
+    const onDeleteLichSu = async (idnguoidung, idtruyen) => {
+        try {
+            const res = await deleteLichSu(idnguoidung, idtruyen);
+            return res;
+        } catch (error) {
+            console.log('onDeleteLichSu error: ', error);
         }
     }
 
@@ -245,7 +291,9 @@ export const ApiContextProvider = (props) => {
                 onAddTheoDoi, onKiemTraTheoDoi, onDeleteTheoDoi, onAddDanhGia, onKiemTraDanhGia,
                 onUpdateDanhGia, onGetListImageChuongByIdChuong, onGetOneChuongById, onLoginUser,
                 onAddUser, onCheckRegister, onAddLuotXem, onAddBinhLuan, onGetListBinhLuanByIdTruyen,
-                onGetTongBinhLuanByIdTruyen, onLayListTruyenTheoLoai, onUpdateUser, onUpdatePasswordUser
+                onGetTongBinhLuanByIdTruyen, onLayListTruyenTheoLoai, onUpdateUser, onUpdatePasswordUser,
+                onKiemTraLichSuXemChuong, onKiemTraLichSu, onGetListTheLoai, onGetListLichSuTheoIdNguoiDung,
+                onDeleteLichSu
             }}
         >
             {children}

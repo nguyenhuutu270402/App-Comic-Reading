@@ -171,9 +171,18 @@ const apiController = {
     },
 
     getListChuongByIdTruyen: async (req, res) => {
+
         try {
-            var id = req.params.idTruyen;
-            var qr = `SELECT chuong.*, COUNT(DISTINCT luotxem.id) AS tongsoluot FROM chuong left JOIN luotxem ON chuong.id = luotxem.idchuong WHERE idtruyen = ${id} GROUP BY chuong.id ORDER BY chuong.sochuong desc`
+            var idTruyen = req.params.idTruyen;
+            var idNguoiDung = req.params.idNguoiDung;
+            var qr = `
+            SELECT chuong.*, lichsuxemchuong.idnguoidung as idnguoidung_da_doc, COUNT(DISTINCT luotxem.id) AS tongsoluot
+            FROM chuong
+            LEFT JOIN luotxem ON chuong.id = luotxem.idchuong
+            LEFT JOIN lichsuxemchuong ON chuong.id = lichsuxemchuong.idchuong AND lichsuxemchuong.idnguoidung = ${idNguoiDung}
+            WHERE chuong.idtruyen = ${idTruyen}
+            group by chuong.id
+            order by chuong.sochuong desc;`
             database.query(qr, (err, results) => {
                 if (err) {
                     res.status(500).json({ message: err.message });
@@ -407,22 +416,6 @@ const apiController = {
         }
     },
 
-    getListTruyenTheoLoai: async (req, res) => {
-        try {
-            const { lastquery } = req.body;
-            database.query("INSERT INTO binhluan (idnguoidung, idtruyen, noidung, ngaybinhluan) VALUES (?, ?, ?, ?)", [idnguoidung, idtruyen, noidung, ngaybinhluan], (err, results) => {
-                if (err) {
-                    res.status(500).json({ message: err.message });
-                } else {
-                    res.status(200).json({ insertId: results.insertId });
-                }
-            });
-        } catch (error) {
-            res.status(500).json(error);
-        }
-    },
-
-
 
     layListTruyenTheoLoai: async (req, res) => {
         try {
@@ -457,6 +450,113 @@ const apiController = {
         }
     },
 
+    getListLichSuTheoIdNguoiDung: async (req, res) => {
+        try {
+            var idNguoiDung = req.params.idNguoiDung;
+            var qr = `
+            select truyen.*, max(chuong.sochuong) as sochuong
+            from lichsu
+            LEFT JOIN truyen ON lichsu.idtruyen = truyen.id
+            LEFT JOIN chuong ON lichsu.idchuong = chuong.id
+            where lichsu.idnguoidung = ${idNguoiDung}
+            group by lichsu.idtruyen 
+            order by max(lichsu.ngayxemgannhat) desc`;
+            database.query(qr, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.status(200).json({ results: results });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    getListTheLoai: async (req, res) => {
+        try {
+            var qr = `select * from theloai order by theloai.tentheloai`;
+            database.query(qr, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.status(200).json({ results: results });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+
+    kiemTraLichSu: async (req, res) => {
+        try {
+            const { idnguoidung, idtruyen, idchuong, ngayxemgannhat } = req.body;
+            database.query("SELECT * FROM lichsu WHERE idnguoidung = ? AND idtruyen = ?", [idnguoidung, idtruyen], (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else if (results.length > 0) {
+                    database.query("UPDATE lichsu SET idchuong = ?, ngayxemgannhat = ? WHERE idnguoidung = ? AND idtruyen = ?", [idchuong, ngayxemgannhat, idnguoidung, idtruyen], (err, results) => {
+                        if (err) {
+                            res.status(500).json({ message: err.message });
+                        } else {
+                            res.status(200).json({ results: true });
+                        }
+                    });
+
+                } else {
+                    database.query("INSERT INTO lichsu (idnguoidung, idtruyen, idchuong, ngayxemgannhat) VALUES (?, ?, ?, ?)", [idnguoidung, idtruyen, idchuong, ngayxemgannhat], (err, results) => {
+                        if (err) {
+                            res.status(500).json({ message: err.message });
+                        } else {
+                            res.status(200).json({ insertId: results.insertId });
+                        }
+                    });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+
+    kiemTraLichSuXemChuong: async (req, res) => {
+        try {
+            const { idnguoidung, idchuong } = req.body;
+            database.query("SELECT * FROM lichsuxemchuong WHERE idnguoidung = ? AND idchuong = ?", [idnguoidung, idchuong], (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else if (results.length > 0) {
+                    res.status(200).json({ results: results });
+                } else {
+                    database.query("INSERT INTO lichsuxemchuong (idnguoidung, idchuong) VALUES (?, ?)", [idnguoidung, idchuong], (err, results) => {
+                        if (err) {
+                            res.status(500).json({ message: err.message });
+                        } else {
+                            res.status(200).json({ insertId: results.insertId });
+                        }
+                    });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    deleteLichSu: async (req, res) => {
+        try {
+            const { idnguoidung, idtruyen } = req.body;
+            database.query("DELETE FROM lichsu WHERE idnguoidung = ? AND idtruyen = ?", [idnguoidung, idtruyen], (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.status(200).json({ results: true });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
 }
 
 module.exports = apiController;

@@ -25,7 +25,7 @@ router.get('/search-truyen', apiController.searchTruyen); // /search-truyen?sear
 
 router.get('/get-3chuong-theo-id-truyen/:idTruyen', apiController.get3Chuong);
 
-router.get('/get-list-chuong-theo-id-truyen/:idTruyen', apiController.getListChuongByIdTruyen);
+router.get('/get-list-chuong-theo-id-truyen/:idTruyen/:idNguoiDung', apiController.getListChuongByIdTruyen);
 
 router.get('/get-list-the-loai-theo-id-truyen/:idTruyen', apiController.getListTheLoaiByIdTruyen);
 
@@ -56,5 +56,15 @@ router.get('/get-list-binh-luan-theo-id-truyen/:idTruyen', apiController.getList
 router.get('/get-tong-binh-luan-theo-id-truyen/:idTruyen', apiController.getTongBinhLuanByIdTruyen);
 
 router.post('/lay-list-truyen-theo-loai', apiController.layListTruyenTheoLoai);
+
+router.get('/get-list-lich-su-theo-id-nguoi-dung/:idNguoiDung', apiController.getListLichSuTheoIdNguoiDung);
+
+router.get('/get-list-the-loai', apiController.getListTheLoai);
+
+router.post('/kiem-tra-lich-su', apiController.kiemTraLichSu);
+
+router.post('/kiem-tra-lich-su-xem-chuong', apiController.kiemTraLichSuXemChuong);
+
+router.post('/delete-lich-su', apiController.deleteLichSu);
 
 module.exports = router;

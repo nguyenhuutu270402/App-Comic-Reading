@@ -15,7 +15,6 @@ const TheoDoiScreen = (props) => {
     const [isShowModal, setIsShowModal] = useState(false);
     const [selectedValue, setSelectedValue] = useState(1);
     const [query0, setQuery0] = useState('');
-    const timeout = useRef(null);
 
     const listSwap = [
         {

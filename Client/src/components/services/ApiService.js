@@ -12,8 +12,8 @@ export const get3Chuong = async (id) => {
     const res = await axiosInstance.get(`api/get-3chuong-theo-id-truyen/${id}`);
     return res;
 }
-export const getListChuongByIdTruyen = async (id) => {
-    const res = await axiosInstance.get(`api/get-list-chuong-theo-id-truyen/${id}`);
+export const getListChuongByIdTruyen = async (idTruyen, idNguoiDung) => {
+    const res = await axiosInstance.get(`api/get-list-chuong-theo-id-truyen/${idTruyen}/${idNguoiDung}`);
     return res;
 }
 export const getOneTruyenById = async (id) => {
@@ -121,9 +121,36 @@ export const getTongBinhLuanByIdTruyen = async (id) => {
     return res;
 }
 
-
 export const layListTruyenTheoLoai = async (lastquery) => {
     const data = { lastquery }
     const res = await axiosInstance.post(`api/lay-list-truyen-theo-loai`, data);
+    return res;
+}
+
+export const kiemTraLichSuXemChuong = async (idnguoidung, idchuong) => {
+    const data = { idnguoidung, idchuong }
+    const res = await axiosInstance.post(`api/kiem-tra-lich-su-xem-chuong`, data);
+    return res;
+}
+
+export const kiemTraLichSu = async (idnguoidung, idtruyen, idchuong, ngayxemgannhat) => {
+    const data = { idnguoidung, idtruyen, idchuong, ngayxemgannhat }
+    const res = await axiosInstance.post(`api/kiem-tra-lich-su`, data);
+    return res;
+}
+
+export const getListLichSuTheoIdNguoiDung = async (id) => {
+    const res = await axiosInstance.get(`api/get-list-lich-su-theo-id-nguoi-dung/${id}`);
+    return res;
+}
+
+export const getListTheLoai = async () => {
+    const res = await axiosInstance.get(`api/get-list-the-loai`);
+    return res;
+}
+
+export const deleteLichSu = async (idnguoidung, idtruyen) => {
+    const data = { idnguoidung, idtruyen }
+    const res = await axiosInstance.post(`api/delete-lich-su`, data);
     return res;
 }

@@ -10,7 +10,7 @@ const ChiTietScreen = (props) => {
     const { onGetOneTruyenById, onGetListChuongByIdTruyen,
         onGetListTheLoaiByIdTruyen, onGetListTacGiaByIdTruyen,
         onAddTheoDoi, onKiemTraTheoDoi, onDeleteTheoDoi, onAddLuotXem,
-        onAddDanhGia, onKiemTraDanhGia, onUpdateDanhGia } = useContext(ApiContext);
+        onAddDanhGia, onKiemTraDanhGia, onUpdateDanhGia, onKiemTraLichSuXemChuong, onKiemTraLichSu } = useContext(ApiContext);
 
     const [kiemTraTheoDoi, setKiemTraTheoDoi] = useState(false);
     const [kiemTraDanhGia, setKiemTraDanhGia] = useState(false);
@@ -34,8 +34,12 @@ const ChiTietScreen = (props) => {
                     setNguoidung(myObject);
                     if (myObject == null) {
                         setIsLogin(false);
+                        const response2 = await onGetListChuongByIdTruyen(id, 0);
+                        setListChuongByIdTruyen(response2.results);
                     } else {
                         setIsLogin(true);
+                        const response2 = await onGetListChuongByIdTruyen(id, myObject.id);
+                        setListChuongByIdTruyen(response2.results);
                         const response5 = await onKiemTraTheoDoi(myObject.id, id);
                         const response6 = await onKiemTraDanhGia(myObject.id, id);
                         setKiemTraTheoDoi(response5.results);
@@ -46,10 +50,8 @@ const ChiTietScreen = (props) => {
                     }
                 });
 
-            const response2 = await onGetListChuongByIdTruyen(id);
             const response3 = await onGetListTheLoaiByIdTruyen(id);
             const response4 = await onGetListTacGiaByIdTruyen(id);
-            setListChuongByIdTruyen(response2.results);
             setListTheLoaiByIdTruyen(response3.results);
             setListTacGiaByIdTruyen(response4.results);
         } catch (error) {
@@ -191,6 +193,8 @@ const ChiTietScreen = (props) => {
             setIsRefresh(!isRefresh);
         } else {
             const response = await onAddLuotXem(nguoidung.id, idChuong, formattedDate);
+            await onKiemTraLichSu(nguoidung.id, oneTruyen.id, idChuong, formattedDate);
+            await onKiemTraLichSuXemChuong(nguoidung.id, idChuong);
             setIsRefresh(!isRefresh);
         }
     }
@@ -327,7 +331,12 @@ const ChiTietScreen = (props) => {
         <Pressable key={item.id} onPress={() => { addLuotXem(item.id); navigation.navigate('ChiTietChuongScreen', { id: item.id, index: index }) }}>
             <View style={styles.boxChuongItem}>
                 <View style={styles.boxTextChuongItem}>
-                    <Text style={styles.textTenChuongItem}>Chapter {item.sochuong}</Text>
+                    {
+                        item.idnguoidung_da_doc !== null ?
+                            <Text style={styles.textTenChuongItem2}>Chapter {item.sochuong}</Text>
+                            :
+                            <Text style={styles.textTenChuongItem}>Chapter {item.sochuong}</Text>
+                    }
                     <View style={styles.boxDateChuongItem}>
                         <AntDesign name="clockcircleo" size={10} color="#777" />
                         <Text style={styles.textDateChuongItem}> {onFormatDate2(item.ngaycapnhat)}</Text>
@@ -424,6 +433,11 @@ const styles = StyleSheet.create({
     boxDateChuongItem: {
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    textTenChuongItem2: {
+        fontSize: 15,
+        color: '#999',
+        fontWeight: '400',
     },
     textTenChuongItem: {
         fontSize: 15,

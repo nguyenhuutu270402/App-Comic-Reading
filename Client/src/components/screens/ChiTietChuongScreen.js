@@ -16,7 +16,7 @@ const ChiTietChuongScreen = (props) => {
     const currentIndex = index;
     const { onGetListImageChuongByIdChuong, onGetListChuongByIdTruyen, onGetOneChuongById,
         onAddTheoDoi, onKiemTraTheoDoi, onDeleteTheoDoi, onAddLuotXem, onGetTongBinhLuanByIdTruyen,
-        onAddBinhLuan, onGetListBinhLuanByIdTruyen, } = useContext(ApiContext);
+        onAddBinhLuan, onGetListBinhLuanByIdTruyen, onKiemTraLichSuXemChuong, onKiemTraLichSu } = useContext(ApiContext);
     const [listImage, setListImage] = useState([]);
     const dimensionsWidth = Dimensions.get('screen').width;
     const [listChuongByIdTruyen, setListChuongByIdTruyen] = useState([]);
@@ -49,15 +49,18 @@ const ChiTietChuongScreen = (props) => {
                     setNguoidung(myObject);
                     if (myObject == null) {
                         setIsLogin(false);
+                        const response3 = await onGetListChuongByIdTruyen(response2.results.idtruyen, 0);
+                        setListChuongByIdTruyen(response3.results);
                     } else {
                         setIsLogin(true);
                         const response4 = await onKiemTraTheoDoi(myObject.id, response2.results.idtruyen);
+                        const response3 = await onGetListChuongByIdTruyen(response2.results.idtruyen, myObject.id);
+                        setListChuongByIdTruyen(response3.results);
                         setKiemTraTheoDoi(response4.results);
                     }
                 });
 
-            const response3 = await onGetListChuongByIdTruyen(response2.results.idtruyen);
-            setListChuongByIdTruyen(response3.results);
+
             const response4 = await onGetTongBinhLuanByIdTruyen(response2.results.idtruyen);
             setTongBinhLuan(response4.results);
             const response5 = await onGetListBinhLuanByIdTruyen(response2.results.idtruyen);
@@ -231,16 +234,17 @@ const ChiTietChuongScreen = (props) => {
         if (isLogin == false) {
             const response = await onAddLuotXem(1, idChuong, formattedDate);
         } else {
+            await onKiemTraLichSu(nguoidung.id, oneChuong.idtruyen, idChuong, formattedDate);
+            await onKiemTraLichSuXemChuong(nguoidung.id, idChuong);
             const response = await onAddLuotXem(nguoidung.id, idChuong, formattedDate);
         }
     }
-    const scrollToItem = () => {
+    const scrollToItem = async () => {
         try {
             flatListRef.current.scrollToIndex({
                 index: currentIndex,
                 animated: true,
             });
-
         } catch (error) {
             console.log('error: ', error);
 

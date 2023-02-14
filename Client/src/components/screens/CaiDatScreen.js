@@ -96,17 +96,15 @@ const CaiDatScreen = (props) => {
                 <View style={styles.boxKhac}>
                     <Text style={styles.textTaiKhoan}>Khác</Text>
                     <View style={styles.boxListItem}>
-                        <Pressable>
+                        <Pressable onPress={() => navigation.navigate('TheLoaiScreen')}>
                             <View style={styles.boxItem}>
                                 <MaterialIcons name="category" size={24} color="#339966" />
-
                                 <Text style={styles.textItem}>Thể loại</Text>
                             </View>
                         </Pressable>
-                        <Pressable>
+                        <Pressable onPress={() => navigation.navigate('LichSuScreen')}>
                             <View style={styles.boxItem}>
                                 <MaterialIcons name="history" size={24} color="#339966" />
-
                                 <Text style={styles.textItem}>Lịch sử</Text>
                             </View>
                         </Pressable>
