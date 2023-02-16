@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, FlatList, TextInput, ScrollView, Alert, ToastAndroid } from 'react-native'
+import { StyleSheet, Text, View, Image, FlatList, TextInput, ScrollView, Alert, ToastAndroid, TouchableOpacity, TouchableHighlight } from 'react-native'
 import { Ionicons, Feather, MaterialIcons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -51,16 +51,23 @@ const CaiDatScreen = (props) => {
                 { text: "Có", onPress: () => onDangXuat() }
             ]
         );
-
+    const onLichSu = () => {
+        if (isLogin == true) {
+            navigation.navigate('LichSuScreen');
+        } else {
+            ToastAndroid.show('Chưa đăng nhập', ToastAndroid.CENTER);
+            return;
+        }
+    }
     return (
         <View style={styles.container}>
             <ScrollView>
 
                 <View style={styles.boxHeader}>
                     <Text style={styles.txtHeader}>Danh mục</Text>
-                    <Pressable style={styles.boxIconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
+                    <TouchableOpacity style={styles.boxIconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
                         <Ionicons name="ios-search" size={28} color="#222" />
-                    </Pressable>
+                    </TouchableOpacity>
                     <View style={styles.boxHeaderShadow}></View>
                 </View>
                 <View style={styles.boxTaiKhoan}>
@@ -69,7 +76,7 @@ const CaiDatScreen = (props) => {
                         isLogin === false ?
                             <Text style={styles.textChuaDangNhap}>Chưa đăng nhập</Text>
                             :
-                            <Pressable style={styles.boxImageTenEmail} onPress={() => navigation.replace('TaiKhoanScreen')}>
+                            <TouchableOpacity style={styles.boxImageTenEmail} onPress={() => navigation.replace('TaiKhoanScreen')}>
                                 {
                                     nguoidung.avatar === null ?
                                         <Ionicons name="person-circle-outline" size={50} color="#3333FF" />
@@ -88,7 +95,7 @@ const CaiDatScreen = (props) => {
                                     }
                                     <Text style={styles.textEmail}>{nguoidung.email}</Text>
                                 </View>
-                            </Pressable>
+                            </TouchableOpacity>
                     }
 
                 </View>
@@ -96,49 +103,49 @@ const CaiDatScreen = (props) => {
                 <View style={styles.boxKhac}>
                     <Text style={styles.textTaiKhoan}>Khác</Text>
                     <View style={styles.boxListItem}>
-                        <Pressable onPress={() => navigation.navigate('TheLoaiScreen')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('TheLoaiScreen')}>
                             <View style={styles.boxItem}>
                                 <MaterialIcons name="category" size={24} color="#339966" />
                                 <Text style={styles.textItem}>Thể loại</Text>
                             </View>
-                        </Pressable>
-                        <Pressable onPress={() => navigation.navigate('LichSuScreen')}>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => onLichSu()}>
                             <View style={styles.boxItem}>
                                 <MaterialIcons name="history" size={24} color="#339966" />
                                 <Text style={styles.textItem}>Lịch sử</Text>
                             </View>
-                        </Pressable>
-                        <Pressable>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.navigate('TimTruyenScreen')}>
                             <View style={styles.boxItem}>
                                 <MaterialIcons name="find-replace" size={24} color="#339966" />
                                 <Text style={styles.textItem}>Tìm truyện</Text>
                             </View>
-                        </Pressable>
+                        </TouchableOpacity>
                         {
                             isLogin === true ?
                                 <View>
 
-                                    <Pressable onPress={() => navigation.navigate('DoiMatKhauScreen')}>
+                                    <TouchableOpacity onPress={() => navigation.navigate('DoiMatKhauScreen')}>
                                         <View style={styles.boxItem}>
                                             <MaterialCommunityIcons name="key-change" size={22} color="#3333FF" />
                                             <Text style={styles.textItem}>Đổi mật khẩu</Text>
                                         </View>
-                                    </Pressable>
-                                    <Pressable onPress={() => onAlertDangXuat()}>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => onAlertDangXuat()}>
                                         <View style={styles.boxItem}>
                                             <Feather name="log-out" size={24} color="#CC0000" />
                                             <Text style={styles.textItem}>Đăng xuất</Text>
                                         </View>
-                                    </Pressable>
+                                    </TouchableOpacity>
                                 </View>
 
                                 :
-                                <Pressable onPress={() => navigation.replace('DangNhapScreen')}>
+                                <TouchableOpacity onPress={() => navigation.replace('DangNhapScreen')}>
                                     <View style={styles.boxItem}>
                                         <Feather name="log-in" size={24} color="#3333FF" />
                                         <Text style={styles.textItem}>Đăng nhập</Text>
                                     </View>
-                                </Pressable>
+                                </TouchableOpacity>
 
                         }
                     </View>

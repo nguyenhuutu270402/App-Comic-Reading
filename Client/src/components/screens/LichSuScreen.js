@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, FlatList, TextInput, RefreshControl } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, TextInput, RefreshControl } from 'react-native'
 import { Ionicons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo, Feather } from '@expo/vector-icons';
 import { ApiContext } from '../contexts/ApiContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,12 +34,12 @@ const LichSuScreen = (props) => {
 
     const renderItem = ({ item }) => (
 
-        <Pressable key={item.id} onPress={() => navigation.push('ChiTietScreen', { id: item.id })} style={styles.containerItemTruyen}>
+        <TouchableOpacity key={item.id} onPress={() => navigation.push('ChiTietScreen', { id: item.id })} style={styles.containerItemTruyen}>
             <View>
                 <Image style={styles.imageTruyen} source={{ uri: item.imagelink }}></Image>
-                <Pressable style={styles.boxXoaTruyen} onPress={() => deletLichSu(item.id)}>
+                <TouchableOpacity style={styles.boxXoaTruyen} onPress={() => deletLichSu(item.id)}>
                     <Text style={styles.textXoaTruyen}>Xóa</Text>
-                </Pressable>
+                </TouchableOpacity>
             </View>
             <View style={styles.boxNameTruyen}>
                 <Text numberOfLines={2} style={styles.textNameTruyen}>{item.tentruyen}</Text>
@@ -47,7 +47,7 @@ const LichSuScreen = (props) => {
                     <Text style={styles.textChapterTruyen}>Đang đọc chap {item.sochuong}</Text>
                 </View>
             </View>
-        </Pressable>
+        </TouchableOpacity>
     );
 
 
@@ -76,24 +76,22 @@ const LichSuScreen = (props) => {
         <View style={styles.container}>
             <View style={styles.boxHeader}>
                 <Text style={styles.txtHeader}>Lịch sử</Text>
-                <Pressable style={styles.boxIconSearch} onPress={() => navigation.pop()}>
+                <TouchableOpacity style={styles.boxIconSearch} onPress={() => navigation.pop()}>
                     <AntDesign name="left" size={24} color="#222" />
-                </Pressable>
+                </TouchableOpacity>
                 <View style={styles.boxHeaderShadow}></View>
             </View>
-            <View style={styles.containerList}>
-                <FlatList
-                    data={listTruyen}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    numColumns={3}
-                    refreshControl={
-                        < RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                    }
-                />
-            </View>
+            <FlatList
+                data={listTruyen}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                numColumns={3}
+                refreshControl={
+                    < RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+            />
 
         </View>
 
@@ -212,6 +210,7 @@ const styles = StyleSheet.create({
     containerItemTruyen: {
         width: '32.4%',
         marginHorizontal: 2,
+        marginVertical: 8,
     },
     boxHeaderShadow: {
         height: 1,
@@ -236,9 +235,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         height: 60,
         marginTop: 6,
-    },
-    containerList: {
-        height: '92%',
+        // marginBottom: 3,
     },
     container: {
         backgroundColor: 'white',

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Pressable, FlatList, ToastAndroid, Alert, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ToastAndroid, Alert, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import { Modal } from 'react-native-paper';
 import { ApiContext } from '../contexts/ApiContext';
@@ -222,12 +222,12 @@ const ChiTietScreen = (props) => {
                     </View>
                     <View style={styles.boxTacGia}>
                         {listTacGiaByIdTruyen.map((item, index) => (
-                            <Pressable key={index} style={styles.itemTacGia} onPress={() => navigation.navigate('TruyenTheoLoaiScreen', { tacgia: item, theloai: null })}>
+                            <TouchableOpacity key={index} style={styles.itemTacGia} onPress={() => navigation.navigate('TruyenTheoLoaiScreen', { tacgia: item, theloai: null })}>
                                 <Text style={styles.textAPITenTacGia}>
                                     {item.tentacgia}
                                     {index === listTacGiaByIdTruyen.length - 1 ? '' : ' - '}
                                 </Text>
-                            </Pressable>
+                            </TouchableOpacity>
                         ))}
                     </View>
 
@@ -246,12 +246,12 @@ const ChiTietScreen = (props) => {
                     </View>
                     <View style={styles.boxTacGia}>
                         {listTheLoaiByIdTruyen.map((item, index) => (
-                            <Pressable key={index} style={styles.itemTacGia} onPress={() => navigation.navigate('TruyenTheoLoaiScreen', { tacgia: null, theloai: item })}>
+                            <TouchableOpacity key={index} style={styles.itemTacGia} onPress={() => navigation.navigate('TruyenTheoLoaiScreen', { tacgia: null, theloai: item })}>
                                 <Text style={styles.textAPITenTacGia}>
                                     {item.tentheloai}
                                     {index === listTheLoaiByIdTruyen.length - 1 ? '' : ' - '}
                                 </Text>
-                            </Pressable>
+                            </TouchableOpacity>
                         ))}
                     </View>
                 </View>
@@ -263,35 +263,35 @@ const ChiTietScreen = (props) => {
                     <Text style={styles.textAPITenKhac}>{onFormatLuotXem(oneTruyen.tongluotxem)}</Text>
                 </View>
                 <View style={styles.boxXepHang}>
-                    <Pressable onPress={() => setIsShowModal(true)}>
+                    <TouchableOpacity onPress={() => setIsShowModal(true)}>
                         <Text style={styles.textDanhGiaXepHang}>Đánh giá: </Text>
 
-                    </Pressable>
+                    </TouchableOpacity>
                     <Text style={styles.textDanhGia}>{oneTruyen.sosaotrungbinh}/5 - {oneTruyen.tongdanhgia} lượt đánh giá</Text>
                 </View>
                 <View style={styles.boxTheoDoi}>
                     {
                         kiemTraTheoDoi === true ?
 
-                            <Pressable style={styles.btTheoDoi2} onPress={() => onAlertDeleteTheoDoi()}>
+                            <TouchableOpacity style={styles.btTheoDoi2} onPress={() => onAlertDeleteTheoDoi()}>
                                 <Entypo name="heart" size={20} color="white" />
                                 <Text style={styles.textTheoDoi}>Bỏ theo dõi</Text>
-                            </Pressable>
+                            </TouchableOpacity>
                             :
 
-                            <Pressable style={styles.btTheoDoi1} onPress={() => addTheoDoi()}>
+                            <TouchableOpacity style={styles.btTheoDoi1} onPress={() => addTheoDoi()}>
                                 <Entypo name="heart" size={20} color="white" />
                                 <Text style={styles.textTheoDoi}>Theo dõi</Text>
-                            </Pressable>
+                            </TouchableOpacity>
                     }
                     <View style={styles.boxAPITheoDoi}>
                         <Text style={styles.textAPITheoDoi}>{onFormatLuotXem(oneTruyen.tongtheodoi)}</Text>
                         <Text style={styles.textLuotTheoDoi}> Lượt theo dõi</Text>
                     </View>
                 </View>
-                <Pressable style={styles.btDocTuDau} onPress={() => navigation.navigate('ChiTietChuongScreen', { id: listChuongByIdTruyen[listChuongByIdTruyen.length - 1].id, index: listChuongByIdTruyen.length - 1 })}>
+                <TouchableOpacity style={styles.btDocTuDau} onPress={() => navigation.navigate('ChiTietChuongScreen', { id: listChuongByIdTruyen[listChuongByIdTruyen.length - 1].id, index: listChuongByIdTruyen.length - 1 })}>
                     <Text style={styles.textTheoDoi}>Đọc từ đầu</Text>
-                </Pressable>
+                </TouchableOpacity>
                 <View style={styles.boxNoiDung}>
                     <View style={styles.boxIconNoiDung}>
                         <MaterialCommunityIcons name="content-save-outline" size={24} color="#1181b3" />
@@ -303,16 +303,16 @@ const ChiTietScreen = (props) => {
                             isShowXemThem === false ?
                                 <View>
                                     <Text style={styles.textAPINoiDung} numberOfLines={3}>{oneTruyen.mota}</Text>
-                                    <Pressable onPress={() => setIsShowXemThem(true)}>
+                                    <TouchableOpacity onPress={() => setIsShowXemThem(true)}>
                                         <Text style={styles.textXemThemNoiDung}>Xem thêm</Text>
-                                    </Pressable>
+                                    </TouchableOpacity>
                                 </View>
                                 :
                                 <View>
                                     <Text style={styles.textAPINoiDung}>{oneTruyen.mota}</Text>
-                                    <Pressable onPress={() => setIsShowXemThem(false)}>
+                                    <TouchableOpacity onPress={() => setIsShowXemThem(false)}>
                                         <Text style={styles.textXemThemNoiDung}>Rút gọn</Text>
-                                    </Pressable>
+                                    </TouchableOpacity>
                                 </View>
                         }
                     </View>
@@ -328,7 +328,7 @@ const ChiTietScreen = (props) => {
         )
     }
     const renderItem = ({ item, index }) => (
-        <Pressable key={item.id} onPress={() => { addLuotXem(item.id); navigation.navigate('ChiTietChuongScreen', { id: item.id, index: index }) }}>
+        <TouchableOpacity key={item.id} onPress={() => { addLuotXem(item.id); navigation.navigate('ChiTietChuongScreen', { id: item.id, index: index }) }}>
             <View style={styles.boxChuongItem}>
                 <View style={styles.boxTextChuongItem}>
                     {
@@ -348,21 +348,21 @@ const ChiTietScreen = (props) => {
                 </View>
             </View>
 
-            <View>
+            {/* <View>
                 <Text numberOfLines={1} style={styles.lineChuongItem}>-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -</Text>
-            </View>
-        </Pressable>
+            </View> */}
+        </TouchableOpacity>
     );
 
     return (
         <View style={styles.container}>
             <View style={styles.boxIconTop}>
-                <Pressable style={styles.iconBack} onPress={() => navigation.pop()}>
+                <TouchableOpacity style={styles.iconBack} onPress={() => navigation.pop()}>
                     <AntDesign name="left" size={24} color="black" />
-                </Pressable>
-                <Pressable style={styles.iconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.iconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
                     <EvilIcons name="search" size={34} color="black" />
-                </Pressable>
+                </TouchableOpacity>
             </View>
             <FlatList style={styles.flatChuong}
                 data={listChuongByIdTruyen}
@@ -382,23 +382,23 @@ const ChiTietScreen = (props) => {
                         {[1, 2, 3, 4, 5].map(value => {
                             return (
                                 <View style={styles.modalRateItem} key={value}>
-                                    <Pressable style={styles.boxItemStart}
+                                    <TouchableOpacity style={styles.boxItemStart}
                                         onPress={() => setRating(value)}
                                     >
                                         <Text style={{ fontSize: 50, color: value <= rating ? 'tomato' : 'gray' }}>★</Text>
-                                    </Pressable>
+                                    </TouchableOpacity>
 
                                 </View>
 
                             );
                         })}
                     </View>
-                    <Pressable onPress={() => addDanhGia()} style={styles.btModalRate}>
+                    <TouchableOpacity onPress={() => addDanhGia()} style={styles.btModalRate}>
                         <Text style={styles.textSubmit}>Đánh giá</Text>
-                    </Pressable>
-                    <Pressable onPress={() => setIsShowModal(false)}>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setIsShowModal(false)}>
                         <Text style={styles.texHuyModalRate}>Hủy</Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
             </Modal>
 
@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
     },
     textTenChuongItem: {
         fontSize: 15,
-        color: '#222',
+        color: '#000',
         fontWeight: '400',
     },
     boxTextChuongItem: {
@@ -451,6 +451,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginVertical: 16,
     },
     lineDanhSachChuong: {
         width: '95%',

@@ -1,5 +1,5 @@
 import {
-    StyleSheet, Text, View, Image, Pressable, FlatList, ToastAndroid, Alert, Dimensions,
+    StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ToastAndroid, Alert, Dimensions,
     StatusBar, ScrollView, TextInput
 } from 'react-native';
 import React, { useContext, useEffect, useState, useRef } from 'react';
@@ -95,13 +95,13 @@ const ChiTietChuongScreen = (props) => {
         return (
 
             <View style={styles.boxIconTop}>
-                <Pressable style={styles.iconBack} onPress={() => navigation.pop()}>
+                <TouchableOpacity style={styles.iconBack} onPress={() => navigation.pop()}>
                     <AntDesign name="left" size={24} color="black" />
-                </Pressable>
+                </TouchableOpacity>
                 <Text style={styles.textTop}>Chapter {oneChuong.sochuong}</Text>
-                <Pressable style={styles.iconSearch} onPress={() => setIsShowModal(true)}>
+                <TouchableOpacity style={styles.iconSearch} onPress={() => setIsShowModal(true)}>
                     <Ionicons name="list" size={28} color="black" />
-                </Pressable>
+                </TouchableOpacity>
 
             </View>
         )
@@ -124,7 +124,7 @@ const ChiTietChuongScreen = (props) => {
     const renderItemModal = ({ item, index }) => (
         <View>
 
-            <Pressable style={styles.itemChuong} key={item.id} onPress={() => { addLuotXem(item.id); navigation.replace('ChiTietChuongScreen', { id: item.id, index: index }) }}>
+            <TouchableOpacity style={styles.itemChuong} key={item.id} onPress={() => { addLuotXem(item.id); navigation.replace('ChiTietChuongScreen', { id: item.id, index: index }) }}>
 
                 <Text style={styles.textTenChuong} key={item.id}>{item.tenchuong}</Text>
                 <View style={styles.boxRadioButton}>
@@ -135,7 +135,7 @@ const ChiTietChuongScreen = (props) => {
                             <View />
                     }
                 </View>
-            </Pressable>
+            </TouchableOpacity>
             <View style={styles.lineItemChuong}></View>
         </View>
 
@@ -290,9 +290,9 @@ const ChiTietChuongScreen = (props) => {
             <View>
                 {
                     isShowMore === false ?
-                        <Pressable style={styles.iconShow} onPress={() => setIsShowMore(true)}>
+                        <TouchableOpacity style={styles.iconShow} onPress={() => setIsShowMore(true)}>
                             <AntDesign name="rightcircleo" size={24} color="tomato" />
-                        </Pressable>
+                        </TouchableOpacity>
                         :
                         <View>
                             <View style={styles.boxMoreBottom}>
@@ -301,46 +301,46 @@ const ChiTietChuongScreen = (props) => {
                                         currentIndex === listChuongByIdTruyen.length - 1 ?
                                             <View />
                                             :
-                                            <Pressable style={styles.truocMoreBottom} onPress={() => { addLuotXem(listChuongByIdTruyen[currentIndex + 1].id); navigation.replace('ChiTietChuongScreen', { id: listChuongByIdTruyen[currentIndex + 1].id, index: currentIndex + 1 }) }}>
+                                            <TouchableOpacity style={styles.truocMoreBottom} onPress={() => { addLuotXem(listChuongByIdTruyen[currentIndex + 1].id); navigation.replace('ChiTietChuongScreen', { id: listChuongByIdTruyen[currentIndex + 1].id, index: currentIndex + 1 }) }}>
                                                 <AntDesign name="left" size={20} color="tomato" />
                                                 <Text style={styles.texTruocMoreBottom}>Trước</Text>
-                                            </Pressable>
+                                            </TouchableOpacity>
                                     }
                                     {
                                         currentIndex === 0 ?
                                             <View />
                                             :
-                                            <Pressable style={styles.truocMoreBottom} onPress={() => { addLuotXem(listChuongByIdTruyen[currentIndex - 1].id); navigation.replace('ChiTietChuongScreen', { id: listChuongByIdTruyen[currentIndex - 1].id, index: currentIndex - 1 }) }}>
+                                            <TouchableOpacity style={styles.truocMoreBottom} onPress={() => { addLuotXem(listChuongByIdTruyen[currentIndex - 1].id); navigation.replace('ChiTietChuongScreen', { id: listChuongByIdTruyen[currentIndex - 1].id, index: currentIndex - 1 }) }}>
                                                 <Text style={styles.texTruocMoreBottom}>Sau</Text>
                                                 <AntDesign name="right" size={20} color="tomato" />
-                                            </Pressable>
+                                            </TouchableOpacity>
                                     }
                                     {
                                         kiemTraTheoDoi === false ?
-                                            <Pressable style={styles.truocMoreBottom} onPress={() => addTheoDoi()}>
+                                            <TouchableOpacity style={styles.truocMoreBottom} onPress={() => addTheoDoi()}>
 
                                                 <AntDesign name="hearto" size={24} color="red" />
-                                            </Pressable>
+                                            </TouchableOpacity>
                                             :
-                                            <Pressable style={styles.truocMoreBottom} onPress={() => onAlertDeleteTheoDoi()}>
+                                            <TouchableOpacity style={styles.truocMoreBottom} onPress={() => onAlertDeleteTheoDoi()}>
                                                 <AntDesign name="heart" size={24} color="red" />
 
-                                            </Pressable>
+                                            </TouchableOpacity>
                                     }
 
-                                    <Pressable style={styles.truocMoreBottom} onPress={() => onBinhLuan()}>
+                                    <TouchableOpacity style={styles.truocMoreBottom} onPress={() => onBinhLuan()}>
                                         <FontAwesome name="commenting-o" size={24} color="tomato" />
-                                    </Pressable>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                             <View style={styles.boxMoreTop}>
-                                <Pressable style={styles.iconBack} onPress={() => navigation.pop()}>
+                                <TouchableOpacity style={styles.iconBack} onPress={() => navigation.pop()}>
                                     <AntDesign name="left" size={24} color="black" />
-                                </Pressable>
+                                </TouchableOpacity>
                                 <Text style={styles.textTop}>Chapter {oneChuong.sochuong}</Text>
-                                <Pressable style={styles.iconSearch} onPress={() => setIsShowModal(true)}>
+                                <TouchableOpacity style={styles.iconSearch} onPress={() => setIsShowModal(true)}>
                                     <Ionicons name="list" size={28} color="black" />
-                                </Pressable>
+                                </TouchableOpacity>
                             </View>
                         </View>
                 }
@@ -369,10 +369,10 @@ const ChiTietChuongScreen = (props) => {
                 <View style={styles.modalBinhLuan}>
                     <View style={styles.boxTongBinhLuan}>
                         <Text style={styles.textTongBinhLuan}>{tongBinhLuan} bình luận</Text>
-                        <Pressable style={styles.iconOutModalBL} onPress={() => setIsShowModal2(false)}>
+                        <TouchableOpacity style={styles.iconOutModalBL} onPress={() => setIsShowModal2(false)}>
                             <Feather name="x" size={24} color="#555" />
 
-                        </Pressable>
+                        </TouchableOpacity>
                     </View>
                     <FlatList
                         data={listBinhLuan}
@@ -400,9 +400,9 @@ const ChiTietChuongScreen = (props) => {
                             value={noiDungBinhLuan}
                             multiline={true}
                             numberOfLines={4} />
-                        <Pressable style={styles.iconSend} onPress={() => addBinhLuan()}>
+                        <TouchableOpacity style={styles.iconSend} onPress={() => addBinhLuan()}>
                             <MaterialCommunityIcons name="send" size={24} color="tomato" />
-                        </Pressable>
+                        </TouchableOpacity>
                     </View>
 
                 </View>

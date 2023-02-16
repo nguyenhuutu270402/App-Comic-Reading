@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, FlatList, TextInput, RefreshControl } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, TextInput, RefreshControl } from 'react-native'
 import { Ionicons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo, Feather } from '@expo/vector-icons';
 import { ApiContext } from '../contexts/ApiContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,7 +8,6 @@ const TheLoaiScreen = (props) => {
     const { navigation } = props;
     const { onGetListTheLoai } = useContext(ApiContext);
     const [listTheLoai, setListTheLoai] = useState([]);
-    const [nguoiDung, setNguoiDung] = useState({});
 
     async function fetchData() {
         try {
@@ -24,35 +23,35 @@ const TheLoaiScreen = (props) => {
 
 
     const renderItem = ({ item }) => (
-        <Pressable key={item.id} style={styles.containerItem} onPress={() => navigation.navigate('TruyenTheoLoaiScreen', { tacgia: null, theloai: item })}>
+        <TouchableOpacity key={item.id} style={styles.containerItem} onPress={() => navigation.navigate('TruyenTheoLoaiScreen', { tacgia: null, theloai: item })}>
             {
                 item.tentheloai === 'Romance' | item.tentheloai === 'Comedy' | item.tentheloai === 'Manga' | item.tentheloai === 'Shounen' ?
                     <Text style={styles.textItem2}>{item.tentheloai}</Text>
                     :
                     <Text style={styles.textItem}>{item.tentheloai}</Text>
             }
-        </Pressable>
+        </TouchableOpacity>
     );
 
     return (
         <View style={styles.container}>
             <View style={styles.boxHeader}>
                 <Text style={styles.txtHeader}>Thể loại</Text>
-                <Pressable style={styles.boxIconSearch} onPress={() => navigation.pop()}>
+                <TouchableOpacity style={styles.boxIconSearch} onPress={() => navigation.pop()}>
                     <AntDesign name="left" size={24} color="#222" />
-                </Pressable>
+                </TouchableOpacity>
                 <View style={styles.boxHeaderShadow}></View>
             </View>
-            <View style={styles.containerList}>
-                <FlatList
-                    data={listTheLoai}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    numColumns={2}
-                />
-            </View>
+
+            <FlatList
+                data={listTheLoai}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                numColumns={2}
+            />
+
 
         </View>
     )
@@ -118,9 +117,7 @@ const styles = StyleSheet.create({
         height: 60,
         marginTop: 6,
     },
-    containerList: {
-        height: '92%',
-    },
+
     container: {
         backgroundColor: 'white',
         height: '100%',

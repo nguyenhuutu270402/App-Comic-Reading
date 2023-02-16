@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, Pressable, FlatList, TextInput } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, TextInput } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 
 const XepHangScreen = (props) => {
@@ -9,9 +9,9 @@ const XepHangScreen = (props) => {
         <View style={styles.container}>
             <View style={styles.boxHeader}>
                 <Text style={styles.txtHeader}>Xếp hạng</Text>
-                <Pressable style={styles.boxIconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
+                <TouchableOpacity style={styles.boxIconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
                     <Ionicons name="ios-search" size={28} color="#222" />
-                </Pressable>
+                </TouchableOpacity>
                 <View style={styles.boxHeaderShadow}></View>
             </View>
 

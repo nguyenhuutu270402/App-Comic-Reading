@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TextInput, ImageBackground, Dimensions, Pressable, ScrollView, ToastAndroid } from 'react-native'
+import { StyleSheet, Text, View, Image, TextInput, ImageBackground, Dimensions, TouchableOpacity, ScrollView, ToastAndroid } from 'react-native'
 import { ApiContext } from '../contexts/ApiContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { Ionicons, Feather, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
@@ -30,9 +30,9 @@ const DangNhapScreen = (props) => {
 
             <View style={styles.container}>
                 <Image style={styles.background} source={require('../../assets/images/bglogin2.png')} />
-                <Pressable style={styles.boxIconBack} onPress={() => navigation.replace('CaiDatScreen')}>
+                <TouchableOpacity style={styles.boxIconBack} onPress={() => navigation.replace('CaiDatScreen')}>
                     <Ionicons name="arrow-back-circle" size={30} color="white" />
-                </Pressable>
+                </TouchableOpacity>
                 <Text style={styles.textDangNhap}>Đăng nhập</Text>
                 <View style={styles.boxAllTextInput}>
                     <View style={styles.boxTextInput}>
@@ -57,22 +57,22 @@ const DangNhapScreen = (props) => {
                             onChangeText={text => setMatKhau(text)} />
                         {
                             isShowMatKhau === true ?
-                                <Pressable style={styles.iconShowPass} onPress={() => setIsShowMatKhau(false)}>
+                                <TouchableOpacity style={styles.iconShowPass} onPress={() => setIsShowMatKhau(false)}>
                                     <Entypo name="eye" size={24} color="white" />
-                                </Pressable>
+                                </TouchableOpacity>
                                 :
-                                <Pressable style={styles.iconShowPass} onPress={() => setIsShowMatKhau(true)}>
+                                <TouchableOpacity style={styles.iconShowPass} onPress={() => setIsShowMatKhau(true)}>
                                     <Entypo name="eye-with-line" size={24} color="white" />
-                                </Pressable>
+                                </TouchableOpacity>
                         }
                     </View>
                 </View>
-                <Pressable style={styles.btDangNhap} onPress={() => onDangNhap()}>
+                <TouchableOpacity style={styles.btDangNhap} onPress={() => onDangNhap()}>
                     <Text style={styles.textBtDangNhap}>Đăng nhập</Text>
-                </Pressable>
-                <Pressable style={styles.btDangKy} onPress={() => navigation.replace('DangKyScreen')}>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btDangKy} onPress={() => navigation.replace('DangKyScreen')}>
                     <Text style={styles.textDangKy}>Đăng ký</Text>
-                </Pressable>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     )

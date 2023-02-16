@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, FlatList, TextInput, ScrollView, Alert, ToastAndroid, Modal } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, TextInput, ScrollView, Alert, ToastAndroid, Modal } from 'react-native'
 import { Ionicons, Feather, MaterialIcons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
@@ -114,9 +114,9 @@ const TaiKhoanScreen = (props) => {
         <View style={styles.container}>
             <View style={styles.boxHeader}>
                 <Text style={styles.txtHeader}>Tài khoản</Text>
-                <Pressable style={styles.boxIconSearch} onPress={() => navigation.replace('CaiDatScreen')}>
+                <TouchableOpacity style={styles.boxIconSearch} onPress={() => navigation.replace('CaiDatScreen')}>
                     <AntDesign name="left" size={24} color="#222" />
-                </Pressable>
+                </TouchableOpacity>
                 <View style={styles.boxHeaderShadow}></View>
             </View>
             <ScrollView>
@@ -133,9 +133,9 @@ const TaiKhoanScreen = (props) => {
                         />
                     )}
 
-                    <Pressable style={styles.btPickImage} onPress={() => pickImage()}>
+                    <TouchableOpacity style={styles.btPickImage} onPress={() => pickImage()}>
                         <Text style={styles.textPickImage}>Chọn ảnh</Text>
-                    </Pressable>
+                    </TouchableOpacity>
                     <View style={styles.boxTextInput}>
                         <MaterialIcons style={styles.iconTextInput} name="drive-file-rename-outline" size={24} color="#339966" />
                         <TextInput
@@ -147,9 +147,9 @@ const TaiKhoanScreen = (props) => {
                             onChangeText={text => setTenNguoiDung(text)} />
                     </View>
 
-                    <Pressable style={styles.btLuu} onPress={() => uploadImage()}>
+                    <TouchableOpacity style={styles.btLuu} onPress={() => uploadImage()}>
                         <Text style={styles.textLuu}>Lưu</Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
 
             </ScrollView>

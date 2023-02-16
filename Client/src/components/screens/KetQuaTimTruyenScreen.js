@@ -1,20 +1,14 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Image, FlatList, TextInput, RefreshControl, Dimensions, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, Pressable, TextInput, RefreshControl, Dimensions } from 'react-native'
 import { Ionicons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo, Feather } from '@expo/vector-icons';
 import { ApiContext } from '../contexts/ApiContext';
 import { Modal } from 'react-native-paper';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-const TheoDoiScreen = (props) => {
-    const { navigation } = props;
-    const [isLogin, setIsLogin] = useState(false);
+const KetQuaTimTruyenScreen = (props) => {
+    const { navigation, route: { params: { midleQuery } } } = props;
     const { onLayListTruyenTheoLoai } = useContext(ApiContext);
     const [listTruyen, setListtruyen] = useState([]);
     const [isShowModal, setIsShowModal] = useState(false);
     const [selectedValue, setSelectedValue] = useState(1);
-    const [query0, setQuery0] = useState('');
 
     const listSwap = [
         {
@@ -41,51 +35,18 @@ const TheoDoiScreen = (props) => {
 
     async function fetchData() {
         try {
-            AsyncStorage.getItem('nguoidung')
-                .then(async value => {
-                    const myObject = JSON.parse(value);
-                    if (myObject == null) {
-                        setIsLogin(false);
-                    } else {
-                        setIsLogin(true);
-                        var query1 = `WHERE theodoi.idnguoidung = ${myObject.id}`;
-                        setQuery0(query1);
-                        query1 = query1 + ` GROUP BY truyen.id
-                 ORDER BY MAX(chuong.ngaycapnhat) desc `;
-                        setSelectedValue(1);
-                        const response = await onLayListTruyenTheoLoai(query1);
-                        setListtruyen(response.results);
-                    }
-                });
+            var qr = midleQuery + ` ORDER BY MAX(chuong.ngaycapnhat) desc `;
+            const response = await onLayListTruyenTheoLoai(qr);
+            setListtruyen(response.results);
+
         } catch (error) {
-            console.log(error)
+            console.error(error);
+
         }
     }
     useEffect(() => {
         fetchData();
     }, []);
-
-    const onRefreshChuaDangNhap = async () => {
-        fetchData();
-    }
-
-    const renderItem = ({ item }) => (
-
-        <TouchableOpacity key={item.id} onPress={() => navigation.push('ChiTietScreen', { id: item.id })} style={styles.containerItemTruyen}>
-            <View>
-                <Image style={styles.imageTruyen} source={{ uri: item.imagelink }}></Image>
-                <View style={styles.boxDateTruyen}>
-                    <Text style={styles.textDateTruyen}>{onFormatDate(item.ngaycapnhat)}</Text>
-                </View>
-            </View>
-            <View style={styles.boxNameTruyen}>
-                <Text numberOfLines={2} style={styles.textNameTruyen}>{item.tentruyen}</Text>
-                <View style={styles.boxChapterTruyen}>
-                    <Text style={styles.textChapterTruyen}>Chapter {item.chuongmoinhat}</Text>
-                </View>
-            </View>
-        </TouchableOpacity>
-    );
 
     const onFormatDate = (date) => {
         var dateCurent = new Date();
@@ -110,18 +71,28 @@ const TheoDoiScreen = (props) => {
             return dateString;
         }
     }
-    const onSwapType = async (key) => {
-        if (isLogin == false) {
-            setSelectedValue(key);
-            setIsShowModal(false);
-            return;
-        }
-        try {
-            console.log('cai qq gi v');
+    const renderItem = ({ item }) => (
 
+        <TouchableOpacity key={item.id} onPress={() => navigation.push('ChiTietScreen', { id: item.id })} style={styles.containerItemTruyen}>
+            <View>
+                <Image style={styles.imageTruyen} source={{ uri: item.imagelink }}></Image>
+                <View style={styles.boxDateTruyen}>
+                    <Text style={styles.textDateTruyen}>{onFormatDate(item.ngaycapnhat)}</Text>
+                </View>
+            </View>
+            <View style={styles.boxNameTruyen}>
+                <Text numberOfLines={2} style={styles.textNameTruyen}>{item.tentruyen}</Text>
+                <View style={styles.boxChapterTruyen}>
+                    <Text style={styles.textChapterTruyen}>Chapter {item.chuongmoinhat}</Text>
+                </View>
+            </View>
+        </TouchableOpacity>
+    );
+
+    const onSwapType = async (key) => {
+        try {
             if (key == 1) {
-                var qr = query0 + ` 
-                    GROUP BY truyen.id
+                var qr = midleQuery + ` 
                     ORDER BY MAX(chuong.ngaycapnhat) desc `;
                 const response = await onLayListTruyenTheoLoai(qr);
                 setListtruyen(response.results);
@@ -129,8 +100,7 @@ const TheoDoiScreen = (props) => {
                 setIsShowModal(false);
                 return;
             } else if (key == 2) {
-                var qr = query0 + ` 
-                    GROUP BY truyen.id
+                var qr = midleQuery + ` 
                     ORDER BY truyen.tentruyen `;
                 const response = await onLayListTruyenTheoLoai(qr);
                 setListtruyen(response.results);
@@ -138,8 +108,7 @@ const TheoDoiScreen = (props) => {
                 setIsShowModal(false);
                 return;
             } else if (key == 3) {
-                var qr = query0 + ` 
-                    GROUP BY truyen.id
+                var qr = midleQuery + ` 
                     ORDER BY COUNT(DISTINCT luotxem.id) desc`;
                 const response = await onLayListTruyenTheoLoai(qr);
                 setListtruyen(response.results);
@@ -147,8 +116,7 @@ const TheoDoiScreen = (props) => {
                 setIsShowModal(false);
                 return;
             } else if (key == 4) {
-                var qr = query0 + ` 
-                    GROUP BY truyen.id
+                var qr = midleQuery + ` 
                     ORDER BY COUNT(DISTINCT theodoi.id) desc`;
                 const response = await onLayListTruyenTheoLoai(qr);
                 setListtruyen(response.results);
@@ -156,8 +124,7 @@ const TheoDoiScreen = (props) => {
                 setIsShowModal(false);
                 return;
             } else if (key == 5) {
-                var qr = query0 + ` 
-                    GROUP BY truyen.id
+                var qr = midleQuery + ` 
                     ORDER BY AVG(danhgia.sosao) desc`;
                 const response = await onLayListTruyenTheoLoai(qr);
                 setListtruyen(response.results);
@@ -165,7 +132,6 @@ const TheoDoiScreen = (props) => {
                 setIsShowModal(false);
                 return;
             }
-
         } catch (error) {
             console.error(error);
 
@@ -174,48 +140,28 @@ const TheoDoiScreen = (props) => {
 
     }
 
-
-    // reload
-    const [refreshing, setRefreshing] = useState(false);
-    const onRefresh = () => {
-        setRefreshing(true);
-        // Fetch your data here and then set refreshing to false
-        fetchData();
-        setTimeout(() => {
-            setRefreshing(false);
-        }, 2000);
-    };
-
     return (
         <View style={styles.container}>
+            {/* box ten trang va nut tim kiem */}
             <View style={styles.boxHeader}>
-                <Text style={styles.txtHeader}>Theo dõi</Text>
+                <Text style={styles.txtHeader}>Tìm truyện</Text>
                 <TouchableOpacity style={styles.boxIconSearch} onPress={() => setIsShowModal(true)}>
                     <AntDesign name="swap" size={26} color="black" />
                 </TouchableOpacity>
-                <View style={styles.boxHeaderShadow}></View>
-
+                <TouchableOpacity style={styles.iconBack} onPress={() => navigation.pop()}>
+                    <AntDesign name="left" size={24} color="black" />
+                </TouchableOpacity>
             </View>
-            {
-                isLogin === false ?
-                    <TouchableOpacity style={styles.boxChuaDangNhap} onPress={() => onRefreshChuaDangNhap()}>
-                        <Text style={styles.textChuaDangNhap}>Chưa đăng nhập</Text>
-                    </TouchableOpacity>
-                    :
-                    <FlatList
-                        data={listTruyen}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id}
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                        numColumns={3}
-                        refreshControl={
-                            < RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                        }
-                    />
+            <View style={styles.boxHeaderShadow}></View>
+            <FlatList
+                data={listTruyen}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                numColumns={3}
+            />
 
-
-            }
             <Modal animationType="fade" visible={isShowModal} onDismiss={() => setIsShowModal(false)}>
                 <View style={styles.modalChap}>
                     {listSwap.map(item => {
@@ -235,20 +181,39 @@ const TheoDoiScreen = (props) => {
                                 </TouchableOpacity>
                                 <View style={styles.lineItemChuong}></View>
                             </View>
+
                         );
                     })}
 
                 </View>
 
             </Modal>
-        </View>
 
-    );
+        </View>
+    )
 }
 
-export default TheoDoiScreen
+export default KetQuaTimTruyenScreen
 
 const styles = StyleSheet.create({
+    textInputSearch: {
+        width: '80%',
+        height: '100%',
+        fontSize: 15,
+    },
+    iconSend: {
+        marginHorizontal: 10,
+    },
+    boxSearch: {
+        width: '100%',
+        height: '90%',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginTop: 6,
+        paddingHorizontal: 50,
+
+    },
     lineItemChuong: {
         width: '100%',
         height: 1.5,
@@ -375,16 +340,7 @@ const styles = StyleSheet.create({
     containerItemTruyen: {
         width: '32.4%',
         marginHorizontal: 2,
-    },
-    textChuaDangNhap: {
-        marginTop: 20,
-        marginLeft: 20,
-        fontSize: 16,
-    },
-    boxChuaDangNhap: {
-        // backgroundColor: 'red',
-        width: '100%',
-        height: '100%',
+        marginVertical: 10,
     },
     boxHeaderShadow: {
         height: 1,
@@ -395,7 +351,7 @@ const styles = StyleSheet.create({
     boxIconSearch: {
         position: 'absolute',
         right: 16,
-        top: 16,
+        top: 20,
     },
     txtHeader: {
         alignSelf: 'center',
@@ -413,5 +369,6 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         height: '100%',
+        width: '100%'
     },
 });

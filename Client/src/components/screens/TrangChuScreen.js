@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, FlatList, Dimensions, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, Dimensions, RefreshControl } from 'react-native';
 import { ApiContext } from '../contexts/ApiContext';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -64,7 +64,7 @@ const TrangChuScreen = (props) => {
     const renderItemTop10Truyen = ({ item }) => {
         const { id, tentruyen, imagelink, chuongmoinhat, ngaycapnhat } = item;
         return (
-            <Pressable onPress={() => navigation.navigate('ChiTietScreen', { id: id })} style={styles.containerItem}>
+            <TouchableOpacity onPress={() => navigation.navigate('ChiTietScreen', { id: id })} style={styles.containerItem}>
                 <Image style={styles.imageTop10} source={{ uri: imagelink }}></Image>
                 <View style={styles.boxNameTop10}>
                     <Text numberOfLines={1} style={styles.textNameTop10}>{tentruyen}</Text>
@@ -76,13 +76,13 @@ const TrangChuScreen = (props) => {
                         </View>
                     </View>
                 </View>
-            </Pressable>
+            </TouchableOpacity>
         )
     }
 
     const renderItemAllTruyen = ({ item }) => (
 
-        <Pressable key={item.id} onPress={() => navigation.navigate('ChiTietScreen', { id: item.id })} style={styles.containerItemTruyen}>
+        <TouchableOpacity key={item.id} onPress={() => navigation.navigate('ChiTietScreen', { id: item.id })} style={styles.containerItemTruyen}>
             <View>
                 <Image style={styles.imageTruyen} source={{ uri: item.imagelink }}></Image>
                 <View style={styles.boxDateTruyen}>
@@ -95,7 +95,7 @@ const TrangChuScreen = (props) => {
                     <Text style={styles.textChapterTruyen}>Chapter {item.chuongmoinhat}</Text>
                 </View>
             </View>
-        </Pressable>
+        </TouchableOpacity>
     );
 
 
@@ -116,9 +116,9 @@ const TrangChuScreen = (props) => {
             {/* box ten trang va nut tim kiem */}
             <View style={styles.boxHeader}>
                 <Text style={styles.txtHeader}>Trang chủ</Text>
-                <Pressable style={styles.boxIconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
+                <TouchableOpacity style={styles.boxIconSearch} onPress={() => navigation.navigate('TimKiemScreen')}>
                     <Ionicons name="ios-search" size={28} color="#222" />
-                </Pressable>
+                </TouchableOpacity>
             </View>
             <View style={styles.boxHeaderShadow}></View>
             <FlatList style={styles.flatAllTruyen}

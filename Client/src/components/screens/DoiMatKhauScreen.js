@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, FlatList, TextInput, ScrollView, Alert, ToastAndroid, Modal } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, TextInput, ScrollView, Alert, ToastAndroid, Modal } from 'react-native'
 import { Ionicons, Feather, MaterialIcons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo } from '@expo/vector-icons';
 import { ApiContext } from '../contexts/ApiContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -64,9 +64,9 @@ const DoiMatKhauScreen = (props) => {
         <View style={styles.container}>
             <View style={styles.boxHeader}>
                 <Text style={styles.txtHeader}>Đổi mật khẩu</Text>
-                <Pressable style={styles.boxIconSearch} onPress={() => navigation.pop()}>
+                <TouchableOpacity style={styles.boxIconSearch} onPress={() => navigation.pop()}>
                     <AntDesign name="left" size={24} color="#222" />
-                </Pressable>
+                </TouchableOpacity>
                 <View style={styles.boxHeaderShadow}></View>
             </View>
             <ScrollView>
@@ -82,13 +82,13 @@ const DoiMatKhauScreen = (props) => {
                             onChangeText={text => setMatKhauCu(text)} />
                         {
                             secure1 === true ?
-                                <Pressable style={styles.iconShowPass} onPress={() => setSecure1(false)}>
+                                <TouchableOpacity style={styles.iconShowPass} onPress={() => setSecure1(false)}>
                                     <Entypo name="eye" size={24} color="grey" />
-                                </Pressable>
+                                </TouchableOpacity>
                                 :
-                                <Pressable style={styles.iconShowPass} onPress={() => setSecure1(true)}>
+                                <TouchableOpacity style={styles.iconShowPass} onPress={() => setSecure1(true)}>
                                     <Entypo name="eye-with-line" size={24} color="grey" />
-                                </Pressable>
+                                </TouchableOpacity>
                         }
                     </View>
 
@@ -103,13 +103,13 @@ const DoiMatKhauScreen = (props) => {
                             onChangeText={text => setMatKhauMoi(text)} />
                         {
                             secure2 === true ?
-                                <Pressable style={styles.iconShowPass} onPress={() => setSecure2(false)}>
+                                <TouchableOpacity style={styles.iconShowPass} onPress={() => setSecure2(false)}>
                                     <Entypo name="eye" size={24} color="grey" />
-                                </Pressable>
+                                </TouchableOpacity>
                                 :
-                                <Pressable style={styles.iconShowPass} onPress={() => setSecure2(true)}>
+                                <TouchableOpacity style={styles.iconShowPass} onPress={() => setSecure2(true)}>
                                     <Entypo name="eye-with-line" size={24} color="grey" />
-                                </Pressable>
+                                </TouchableOpacity>
                         }
                     </View>
 
@@ -124,19 +124,19 @@ const DoiMatKhauScreen = (props) => {
                             onChangeText={text => setMatKhauLai(text)} />
                         {
                             secure3 === true ?
-                                <Pressable style={styles.iconShowPass} onPress={() => setSecure3(false)}>
+                                <TouchableOpacity style={styles.iconShowPass} onPress={() => setSecure3(false)}>
                                     <Entypo name="eye" size={24} color="grey" />
-                                </Pressable>
+                                </TouchableOpacity>
                                 :
-                                <Pressable style={styles.iconShowPass} onPress={() => setSecure3(true)}>
+                                <TouchableOpacity style={styles.iconShowPass} onPress={() => setSecure3(true)}>
                                     <Entypo name="eye-with-line" size={24} color="grey" />
-                                </Pressable>
+                                </TouchableOpacity>
                         }
                     </View>
 
-                    <Pressable style={styles.btLuu} onPress={() => onDoiMatKhau()}>
+                    <TouchableOpacity style={styles.btLuu} onPress={() => onDoiMatKhau()}>
                         <Text style={styles.textLuu}>Lưu</Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
 

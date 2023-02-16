@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, FlatList, ToastAndroid, Alert, Dimensions, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ToastAndroid, Alert, Dimensions, TextInput } from 'react-native';
 import { Modal } from 'react-native-paper';
 import { ApiContext } from '../contexts/ApiContext';
 import { Ionicons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo } from '@expo/vector-icons';
@@ -29,7 +29,7 @@ const TimKiemScreen = (props) => {
         },
         {
             id: 4,
-            swap: 'Theo dõi',
+            swap: 'Lượt theo dõi',
         },
         {
             id: 5,
@@ -69,7 +69,7 @@ const TimKiemScreen = (props) => {
 
     const renderItem = ({ item }) => (
 
-        <Pressable key={item.id} onPress={() => navigation.push('ChiTietScreen', { id: item.id })} style={styles.containerItemTruyen}>
+        <TouchableOpacity key={item.id} onPress={() => navigation.push('ChiTietScreen', { id: item.id })} style={styles.containerItemTruyen}>
             <View>
                 <Image style={styles.imageTruyen} source={{ uri: item.imagelink }}></Image>
                 <View style={styles.boxDateTruyen}>
@@ -82,7 +82,7 @@ const TimKiemScreen = (props) => {
                     <Text style={styles.textChapterTruyen}>Chapter {item.chuongmoinhat}</Text>
                 </View>
             </View>
-        </Pressable>
+        </TouchableOpacity>
     );
 
     const onSwapType = async (key) => {
@@ -166,9 +166,9 @@ const TimKiemScreen = (props) => {
             {/* box ten trang va nut tim kiem */}
             <View style={styles.boxHeader}>
                 <View style={styles.boxSearch}>
-                    <Pressable style={styles.iconSend}>
+                    <TouchableOpacity style={styles.iconSend}>
                         <AntDesign name="search1" size={24} color="tomato" />
-                    </Pressable>
+                    </TouchableOpacity>
                     <TextInput
                         style={styles.textInputSearch}
                         placeholder='Tìm kiếm...'
@@ -178,12 +178,12 @@ const TimKiemScreen = (props) => {
 
                 </View>
 
-                <Pressable style={styles.boxIconSearch} onPress={() => setIsShowModal(true)}>
+                <TouchableOpacity style={styles.boxIconSearch} onPress={() => setIsShowModal(true)}>
                     <AntDesign name="swap" size={26} color="black" />
-                </Pressable>
-                <Pressable style={styles.iconBack} onPress={() => navigation.pop()}>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.iconBack} onPress={() => navigation.pop()}>
                     <AntDesign name="left" size={24} color="black" />
-                </Pressable>
+                </TouchableOpacity>
             </View>
             <View style={styles.boxHeaderShadow}></View>
             <FlatList
@@ -200,7 +200,7 @@ const TimKiemScreen = (props) => {
                     {listSwap.map(item => {
                         return (
                             <View key={item.id}>
-                                <Pressable style={styles.itemChuong} onPress={() => onSwapType(item.id)}>
+                                <TouchableOpacity style={styles.itemChuong} onPress={() => onSwapType(item.id)}>
 
                                     <Text style={styles.textTenChuong}>{item.swap}</Text>
                                     <View style={styles.boxRadioButton}>
@@ -211,7 +211,7 @@ const TimKiemScreen = (props) => {
                                                 <View />
                                         }
                                     </View>
-                                </Pressable>
+                                </TouchableOpacity>
                                 <View style={styles.lineItemChuong}></View>
                             </View>
 
