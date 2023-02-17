@@ -94,7 +94,7 @@ const TimTruyenScreen = (props) => {
     }
 
     const renderItem = ({ item }) => (
-        <Pressable key={item.id} style={styles.containerItem} onPress={() => pickSelects(item.tentheloai)}>
+        <TouchableOpacity key={item.id} style={styles.containerItem} onPress={() => pickSelects(item.tentheloai)}>
             <View style={styles.boxCheck}>
                 {listTenTheLoaiChon.includes(item.tentheloai) &&
                     <Entypo name="check" size={20} color="#339966" />
@@ -104,7 +104,7 @@ const TimTruyenScreen = (props) => {
                 }
             </View>
             <Text style={styles.textItem}>{item.tentheloai}</Text>
-        </Pressable>
+        </TouchableOpacity>
     );
     return (
         <View style={styles.container}>

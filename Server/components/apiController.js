@@ -423,6 +423,7 @@ const apiController = {
             var qr = `SELECT truyen.id,
             truyen.tentruyen,
             truyen.imagelink, 
+            truyen.mota, 
                 COUNT(DISTINCT luotxem.id) AS 'tongluotxem', 
                 COUNT(DISTINCT theodoi.id) AS 'tongtheodoi',
                 COUNT(DISTINCT danhgia.id) AS 'tongdanhgia',

@@ -117,7 +117,6 @@ const TheoDoiScreen = (props) => {
             return;
         }
         try {
-            console.log('cai qq gi v');
 
             if (key == 1) {
                 var qr = query0 + ` 
@@ -375,6 +374,7 @@ const styles = StyleSheet.create({
     containerItemTruyen: {
         width: '32.4%',
         marginHorizontal: 2,
+        marginVertical: 10,
     },
     textChuaDangNhap: {
         marginTop: 20,
