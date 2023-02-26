@@ -6,7 +6,10 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var apiRouter = require('./routes/api');
-
+require('dotenv').config();
+const session = require('express-session');
+const hbs = require('hbs');
+const moment = require('moment');
 
 var app = express();
 
@@ -20,6 +23,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  secret: process.env.APP_SECRET,
+  resave: true,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
+hbs.registerHelper('moment', function (date, format) {
+  return moment(date).format(format);
+});
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api', apiRouter);

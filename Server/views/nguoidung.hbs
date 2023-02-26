@@ -22,13 +22,14 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
-
+            padding: 20px;
         }
 
         th {
             background-color: #4CAF50;
             color: #fff;
             padding: 20px;
+
         }
 
         tr:nth-child(even) {
@@ -67,7 +68,6 @@
             font-size: 16px;
             border-radius: 4px;
             cursor: pointer;
-            align-content: flex-end;
         }
 
         button[type="submit"]:hover {
@@ -103,8 +103,7 @@
 
         <!-- Tab link -->
         <ul class="menu-list">
-            <a onclick="redicrectHome('{{user._id}}')" class="tablinks" style="color: red;
-            border-bottom: 2px solid red;">
+            <a href="/" class="tablinks">
                 <li>Truyện</li>
             </a>
             <a href="/the-loai" class="tablinks">
@@ -113,35 +112,36 @@
             <a href="/tac-gia" class="tablinks">
                 <li>Tác giả</li>
             </a>
-            <a href="/nguoi-dung" class="tablinks">
+            <a class="tablinks" style="color: red;
+            border-bottom: 2px solid red;">
                 <li>Người dùng</li>
             </a>
         </ul>
 
         <body>
+            {{!-- <form action="/search" method="get">
+                <input type="text" name="keyword" placeholder="Nhập từ khóa tìm kiếm...">
+                <button type="submit">Tìm kiếm</button>
+            </form> --}}
             <button class="btn" type="submit">Thêm</button>
 
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Tên truyện</th>
-                        <th>Số lượt xem</th>
-                        <th>Số lượt theo dõi</th>
-                        <th>Số lượt đánh giá</th>
-                        <th>Cập nhật gần nhất</th>
+                        <th>Tên người dùng</th>
+                        <th>Email</th>
 
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each listTruyen}}
+                    {{#each listNguoiDung}}
                     <tr>
                         <td>{{id}}</td>
-                        <td class="tentruyen"><a href="/chitiet/{{id}}">{{tentruyen}}</a></td>
-                        <td>{{tongluotxem}}</td>
-                        <td>{{tongtheodoi}}</td>
-                        <td>{{tongdanhgia}}</td>
-                        <td>{{moment ngaycapnhat "HH:mm DD/MM/YYYY"}}</td>
+                        <td><a href="/chitiet/{{id}}">{{tennguoidung}}</a></td>
+                        <td><a href="/chitiet/{{id}}">{{email}}</a></td>
+
+
                     </tr>
                     {{/each}}
                 </tbody>
