@@ -292,7 +292,7 @@ const apiController = {
     addLuotXem: async (req, res) => {
         try {
             const { idnguoidung, idchuong, ngayxem } = req.body;
-            database.query("INSERT INTO luotxem (idnguoidung, idchuong, ngayxem) VALUES (?, ?, ?)", [idnguoidung, idchuong, ngayxem], (err, results) => {
+            database.query("INSERT INTO luotxem (idnguoidung, idchuong, ngayxem) VALUES (?, ?, now())", [idnguoidung, idchuong], (err, results) => {
                 if (err) {
                     res.status(500).json({ message: err.message });
                 } else {
@@ -388,7 +388,7 @@ const apiController = {
     addBinhLuan: async (req, res) => {
         try {
             const { idnguoidung, idtruyen, noidung, ngaybinhluan } = req.body;
-            database.query("INSERT INTO binhluan (idnguoidung, idtruyen, noidung, ngaybinhluan) VALUES (?, ?, ?, ?)", [idnguoidung, idtruyen, noidung, ngaybinhluan], (err, results) => {
+            database.query("INSERT INTO binhluan (idnguoidung, idtruyen, noidung, ngaybinhluan) VALUES (?, ?, ?, CONVERT_TZ(NOW(), @@session.time_zone, '+07:00'))", [idnguoidung, idtruyen, noidung], (err, results) => {
                 if (err) {
                     res.status(500).json({ message: err.message });
                 } else {
@@ -497,7 +497,7 @@ const apiController = {
                 if (err) {
                     res.status(500).json({ message: err.message });
                 } else if (results.length > 0) {
-                    database.query("UPDATE lichsu SET idchuong = ?, ngayxemgannhat = ? WHERE idnguoidung = ? AND idtruyen = ?", [idchuong, ngayxemgannhat, idnguoidung, idtruyen], (err, results) => {
+                    database.query("UPDATE lichsu SET idchuong = ?, ngayxemgannhat = now() WHERE idnguoidung = ? AND idtruyen = ?", [idchuong, idnguoidung, idtruyen], (err, results) => {
                         if (err) {
                             res.status(500).json({ message: err.message });
                         } else {
@@ -506,7 +506,7 @@ const apiController = {
                     });
 
                 } else {
-                    database.query("INSERT INTO lichsu (idnguoidung, idtruyen, idchuong, ngayxemgannhat) VALUES (?, ?, ?, ?)", [idnguoidung, idtruyen, idchuong, ngayxemgannhat], (err, results) => {
+                    database.query("INSERT INTO lichsu (idnguoidung, idtruyen, idchuong, ngayxemgannhat) VALUES (?, ?, ?, now())", [idnguoidung, idtruyen, idchuong], (err, results) => {
                         if (err) {
                             res.status(500).json({ message: err.message });
                         } else {

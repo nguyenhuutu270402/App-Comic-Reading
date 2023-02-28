@@ -6,7 +6,6 @@ import React, { useContext, useEffect, useState, useRef } from 'react';
 import { ApiContext } from '../contexts/ApiContext';
 import { Modal } from 'react-native-paper';
 import { Ionicons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo, Feather } from '@expo/vector-icons';
-import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -196,9 +195,8 @@ const ChiTietChuongScreen = (props) => {
     const addBinhLuan = async () => {
         if (noiDungBinhLuan.length > 0) {
             let date = new Date();
-            moment.locale('vi');
-            let formattedDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
-            await onAddBinhLuan(nguoidung.id, oneChuong.idtruyen, noiDungBinhLuan, formattedDate);
+
+            await onAddBinhLuan(nguoidung.id, oneChuong.idtruyen, noiDungBinhLuan, date);
             setNoiDungBinhLuan('');
             ToastAndroid.show('Bình luận thành công', ToastAndroid.CENTER);
             // lay lai data binhluan
@@ -229,14 +227,13 @@ const ChiTietChuongScreen = (props) => {
 
     const addLuotXem = async (idChuong) => {
         let date = new Date();
-        moment.locale('vi');
-        let formattedDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
+
         if (isLogin == false) {
-            const response = await onAddLuotXem(1, idChuong, formattedDate);
+            const response = await onAddLuotXem(1, idChuong, date);
         } else {
-            await onKiemTraLichSu(nguoidung.id, oneChuong.idtruyen, idChuong, formattedDate);
+            await onKiemTraLichSu(nguoidung.id, oneChuong.idtruyen, idChuong, date);
             await onKiemTraLichSuXemChuong(nguoidung.id, idChuong);
-            const response = await onAddLuotXem(nguoidung.id, idChuong, formattedDate);
+            const response = await onAddLuotXem(nguoidung.id, idChuong, date);
         }
     }
     const scrollToItem = async () => {

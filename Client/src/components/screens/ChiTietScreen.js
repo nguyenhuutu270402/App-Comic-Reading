@@ -4,7 +4,6 @@ import { Modal } from 'react-native-paper';
 import { ApiContext } from '../contexts/ApiContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo } from '@expo/vector-icons';
-import moment from 'moment';
 const ChiTietScreen = (props) => {
     const { navigation, route: { params: { id } } } = props;
     const { onGetOneTruyenById, onGetListChuongByIdTruyen,
@@ -186,14 +185,12 @@ const ChiTietScreen = (props) => {
 
     const addLuotXem = async (idChuong) => {
         let date = new Date();
-        moment.locale('vi');
-        let formattedDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
         if (isLogin == false) {
-            const response = await onAddLuotXem(1, idChuong, formattedDate);
+            const response = await onAddLuotXem(1, idChuong, date);
             setIsRefresh(!isRefresh);
         } else {
-            const response = await onAddLuotXem(nguoidung.id, idChuong, formattedDate);
-            await onKiemTraLichSu(nguoidung.id, oneTruyen.id, idChuong, formattedDate);
+            const response = await onAddLuotXem(nguoidung.id, idChuong, date);
+            await onKiemTraLichSu(nguoidung.id, oneTruyen.id, idChuong, date);
             await onKiemTraLichSuXemChuong(nguoidung.id, idChuong);
             setIsRefresh(!isRefresh);
         }
