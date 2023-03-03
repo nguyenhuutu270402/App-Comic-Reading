@@ -114,7 +114,7 @@
         </ul>
 
         <body>
-            <button class="btn" type="submit">Thêm</button>
+            <button onclick="them()" class="btn" type="submit">Thêm</button>
             <table>
                 <thead>
                     <tr>
@@ -126,7 +126,7 @@
                     {{#each listTacGia}}
                     <tr>
                         <td>{{id}}</td>
-                        <td class="tentruyen"><a href="/chitiet/{{id}}">{{tentacgia}}</a></td>
+                        <td class="tentruyen"><a href="/update-tac-gia/{{id}}">{{tentacgia}}</a></td>
 
                     </tr>
                     {{/each}}
@@ -135,5 +135,8 @@
 
     </div>
     <script>
+        function them() {
+            window.location.href = "/add-tac-gia";
+        }
     </script>
 </body>

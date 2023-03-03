@@ -123,7 +123,6 @@
                 <input type="text" name="keyword" placeholder="Nhập từ khóa tìm kiếm...">
                 <button type="submit">Tìm kiếm</button>
             </form> --}}
-            <button class="btn" type="submit">Thêm</button>
 
             <table>
                 <thead>
@@ -138,10 +137,8 @@
                     {{#each listNguoiDung}}
                     <tr>
                         <td>{{id}}</td>
-                        <td><a href="/chitiet/{{id}}">{{tennguoidung}}</a></td>
-                        <td><a href="/chitiet/{{id}}">{{email}}</a></td>
-
-
+                        <td>{{tennguoidung}}</td>
+                        <td>{{email}}</td>
                     </tr>
                     {{/each}}
                 </tbody>

@@ -1,7 +1,24 @@
 var express = require('express');
 var router = express.Router();
+var database = require('../components/database');
 const controller = require('../components/controller');
 const authentication = require('../middle/auth');
+const serviceAccount = require('../firebase-adminsdk.json');
+const firebase = require('firebase-admin');
+const multer = require('multer');
+// Initialize Firebase App
+firebase.initializeApp({
+  credential: firebase.credential.cert(serviceAccount),
+  storageBucket: 'app-comic-reading.appspot.com'
+});
+// Create a Multer storage engine to handle file uploads
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: null }
+});
+
+
+
 /* GET home page. */
 
 router.get('/login', function (req, res, next) {
@@ -21,5 +38,307 @@ router.get('/the-loai', [authentication.checkLogin], controller.getTheLoai);
 router.get('/tac-gia', [authentication.checkLogin], controller.getTacGia);
 router.get('/nguoi-dung', [authentication.checkLogin], controller.getNguoiDung);
 
+router.get('/add-tac-gia', [authentication.checkLogin], controller.getAddTacGia);
+router.post('/post-add-tac-gia', [authentication.checkLogin], controller.postAddTacGia);
+router.get('/update-tac-gia/:id', [authentication.checkLogin], controller.getUpdateTacGia);
+router.post('/post-update-tac-gia', [authentication.checkLogin], controller.postUpdateTacGia);
+
+router.get('/add-the-loai', [authentication.checkLogin], controller.getAddTheLoai);
+router.post('/post-add-the-loai', [authentication.checkLogin], controller.postAddTheLoai);
+router.get('/update-the-loai/:id', [authentication.checkLogin], controller.getUpdateTheLoai);
+router.post('/post-update-the-loai', [authentication.checkLogin], controller.postUpdateTheLoai);
+
+router.get('/add-truyen', [authentication.checkLogin], controller.getAddTruyen);
+router.post('/post-add-truyen', [authentication.checkLogin, upload.single('image')], async (req, res) => {
+  try {
+    // Get the uploaded file
+    const file = req.file;
+
+    // Upload file to Firebase Storage
+    const bucket = firebase.storage().bucket();
+    const firebaseFileName = `${Date.now()}_${file.originalname}`;
+    const firebaseFile = bucket.file(`truyen/${firebaseFileName}`);
+    const fileStream = firebaseFile.createWriteStream();
+    fileStream.end(file.buffer);
+    await new Promise((resolve, reject) => {
+      fileStream.on('finish', resolve);
+      fileStream.on('error', reject);
+    });
+
+    // Get public URL for the uploaded file
+    const [url] = await firebaseFile.getSignedUrl({ action: 'read', expires: '01-01-2500' });
+
+    // them truyen
+    const { tentruyen, tenkhac, mota, tacgias, theloais } = req.body;
+    database.query("INSERT INTO truyen (tentruyen, tenkhac, tinhtrang, mota, imagelink) VALUES (? , ?, 1, ?, ?)", [tentruyen, tenkhac, mota, url], (err, results) => {
+      if (err) {
+        res.status(500).json({ message: err.message });
+      } else {
+        for (let index = 0; index < tacgias.length; index++) {
+          const element = tacgias[index];
+          database.query("INSERT INTO ct_tacgia (idtruyen, idtacgia) VALUES (? , ?)", [results.insertId, element], (err, results) => {
+            if (err) {
+              res.status(500).json({ message: err.message });
+            } else {
+
+            }
+          });
+        }
+        for (let index = 0; index < theloais.length; index++) {
+          const element = theloais[index];
+          database.query("INSERT INTO ct_theloai (idtruyen, idtheloai) VALUES (? , ?)", [results.insertId, element], (err, results) => {
+            if (err) {
+              res.status(500).json({ message: err.message });
+            } else {
+
+            }
+          });
+        }
+      }
+    });
+    res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while uploading the image.');
+  }
+});
+router.get('/update-truyen/:id', [authentication.checkLogin], controller.getUpdateTruyen);
+router.post('/post-update-truyen', [authentication.checkLogin, upload.single('image')], async (req, res) => {
+  try {
+    if (req.file == undefined) {
+      // sửa truyen
+      const { tentruyen, tenkhac, tinhtrang, mota, tacgias, theloais, id } = req.body;
+      console.log(">>>", theloais, tacgias);
+      database.query(`UPDATE truyen
+                  SET tentruyen = ? , tenkhac = ? , tinhtrang = ? , mota = ? 
+                  WHERE id = ?`, [tentruyen, tenkhac, tinhtrang, mota, id], (err, results) => {
+        if (err) {
+          res.status(500).json({ message: err.message });
+        } else {
+          // xóa các chi tiết cũ và insert lại 
+          database.query(" DELETE FROM ct_tacgia WHERE idtruyen = ?", [id], (err, results) => {
+            if (err) {
+              res.status(500).json({ message: err.message });
+            } else {
+
+            }
+          });
+          database.query(" DELETE FROM ct_theloai WHERE idtruyen = ?", [id], (err, results) => {
+            if (err) {
+              res.status(500).json({ message: err.message });
+            } else {
+
+            }
+          });
+          for (let index = 0; index < tacgias.length; index++) {
+            const element = tacgias[index];
+            database.query("INSERT INTO ct_tacgia (idtruyen, idtacgia) VALUES (? , ?)", [id, element], (err, results) => {
+              if (err) {
+                res.status(500).json({ message: err.message });
+              } else {
+
+              }
+            });
+          }
+          for (let index = 0; index < theloais.length; index++) {
+            const element = theloais[index];
+            database.query("INSERT INTO ct_theloai (idtruyen, idtheloai) VALUES (? , ?)", [id, element], (err, results) => {
+              if (err) {
+                res.status(500).json({ message: err.message });
+              } else {
+
+              }
+            });
+          }
+        }
+      });
+    } else {
+      // Get the uploaded file
+      const file = req.file;
+
+      // Upload file to Firebase Storage
+      const bucket = firebase.storage().bucket();
+      const firebaseFileName = `${Date.now()}_${file.originalname}`;
+      const firebaseFile = bucket.file(`truyen/${firebaseFileName}`);
+      const fileStream = firebaseFile.createWriteStream();
+      fileStream.end(file.buffer);
+      await new Promise((resolve, reject) => {
+        fileStream.on('finish', resolve);
+        fileStream.on('error', reject);
+      });
+
+      // Get public URL for the uploaded file
+      const [url] = await firebaseFile.getSignedUrl({ action: 'read', expires: '01-01-2500' });
+
+      // sửa truyen
+      const { tentruyen, tenkhac, tinhtrang, mota, tacgias, theloais, id } = req.body;
+      database.query(`UPDATE truyen
+      SET tentruyen = ? , tenkhac = ? , tinhtrang = ? , mota = ? , imagelink = ? 
+      WHERE id = ?`, [tentruyen, tenkhac, tinhtrang, mota, url, id], (err, results) => {
+        if (err) {
+          res.status(500).json({ message: err.message });
+        } else {
+          // xóa các chi tiết cũ và insert lại 
+          database.query(" DELETE FROM ct_tacgia WHERE idtruyen = ?", [id], (err, results) => {
+            if (err) {
+              res.status(500).json({ message: err.message });
+            } else {
+
+            }
+          });
+          database.query(" DELETE FROM ct_theloai WHERE idtruyen = ?", [id], (err, results) => {
+            if (err) {
+              res.status(500).json({ message: err.message });
+            } else {
+
+            }
+          });
+          for (let index = 0; index < tacgias.length; index++) {
+            const element = tacgias[index];
+            database.query("INSERT INTO ct_tacgia (idtruyen, idtacgia) VALUES (? , ?)", [id, element], (err, results) => {
+              if (err) {
+                res.status(500).json({ message: err.message });
+              } else {
+
+              }
+            });
+          }
+          for (let index = 0; index < theloais.length; index++) {
+            const element = theloais[index];
+            database.query("INSERT INTO ct_theloai (idtruyen, idtheloai) VALUES (? , ?)", [id, element], (err, results) => {
+              if (err) {
+                res.status(500).json({ message: err.message });
+              } else {
+
+              }
+            });
+          }
+        }
+      });
+    }
+
+    res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while uploading the image.');
+  }
+});
+
+
+router.get('/update-truyen/:idTruyen/chuong', [authentication.checkLogin], controller.getChuong);
+
+router.get('/update-truyen/:idTruyen/add-chuong', [authentication.checkLogin], controller.getAddChuong);
+router.get('/update-truyen/:idTruyen/update-chuong/:idChuong', [authentication.checkLogin], controller.getUpdateChuong);
+
+
+router.post('/update-truyen/:idTruyen/post-add-chuong', upload.array('images'), async (req, res) => {
+  try {
+    const files = req.files;
+    // Upload các file lên Firebase Storage và trả về các URL
+    const urls = await Promise.all(files.map(async (file) => {
+      const bucket = firebase.storage().bucket();
+      const firebaseFileName = `${Date.now()}_${file.originalname}`;
+      const firebaseFile = bucket.file(`chuong/${firebaseFileName}`);
+      const fileStream = firebaseFile.createWriteStream();
+      fileStream.end(file.buffer);
+      await new Promise((resolve, reject) => {
+        fileStream.on('finish', resolve);
+        fileStream.on('error', reject);
+      });
+      const [url] = await firebaseFile.getSignedUrl({ action: 'read', expires: '01-01-2500' });
+      return url;
+    }));
+    const { tenchuong, sochuong } = req.body;
+    database.query("INSERT INTO chuong (tenchuong, sochuong, ngaycapnhat, idtruyen) VALUES (?, ? , now() , ?)", [tenchuong, sochuong, req.params.idTruyen], (err, results) => {
+      if (err) {
+        res.status(500).json({ message: err.message });
+      } else {
+        for (let index = urls.length - 1; index >= 0; index--) {
+          const element = urls[index];
+          database.query("INSERT INTO image_chuong (imagelink, idchuong) VALUES (?, ? )", [element, results.insertId], (err, results) => {
+            if (err) {
+              res.status(500).json({ message: err.message });
+            } else {
+            }
+          });
+        }
+
+      }
+    });
+    res.redirect(`/update-truyen/${req.params.idTruyen}/chuong`);
+    // Trả về các URL đã upload
+    // res.status(200).json({ urls });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while uploading the files.');
+  }
+});
+
+router.post('/update-truyen/:idTruyen/post-update-chuong', upload.array('images'), async (req, res) => {
+  try {
+    if (req.files[0] == undefined) {
+
+      const { tenchuong, sochuong, id } = req.body;
+      database.query(`UPDATE chuong
+      SET tenchuong = ? , sochuong = ?, ngaycapnhat = now()
+      WHERE id = ?`, [tenchuong, sochuong, id], (err, results) => {
+        if (err) {
+          res.status(500).json({ message: err.message });
+        } else {
+
+        }
+      });
+    } else {
+
+      const files = req.files;
+      // Upload các file lên Firebase Storage và trả về các URL
+      const urls = await Promise.all(files.map(async (file) => {
+        const bucket = firebase.storage().bucket();
+        const firebaseFileName = `${Date.now()}_${file.originalname}`;
+        const firebaseFile = bucket.file(`chuong/${firebaseFileName}`);
+        const fileStream = firebaseFile.createWriteStream();
+        fileStream.end(file.buffer);
+        await new Promise((resolve, reject) => {
+          fileStream.on('finish', resolve);
+          fileStream.on('error', reject);
+        });
+        const [url] = await firebaseFile.getSignedUrl({ action: 'read', expires: '01-01-2500' });
+        return url;
+      }));
+      const { tenchuong, sochuong, id } = req.body;
+      database.query(`UPDATE chuong
+    SET tenchuong = ? , sochuong = ?, ngaycapnhat = now()
+    WHERE id = ?`, [tenchuong, sochuong, id], (err, results) => {
+        if (err) {
+          res.status(500).json({ message: err.message });
+        } else {
+          database.query("DELETE FROM image_chuong WHERE idchuong = ?", [id], (err, results) => {
+            if (err) {
+              res.status(500).json({ message: err.message });
+            } else {
+            }
+          });
+          for (let index = urls.length - 1; index >= 0; index--) {
+            const element = urls[index];
+            console.log("e>> ", element);
+            database.query("INSERT INTO image_chuong (imagelink, idchuong) VALUES (?, ? )", [element, id], (err, results) => {
+              if (err) {
+                res.status(500).json({ message: err.message });
+              } else {
+              }
+            });
+          }
+
+        }
+      });
+    }
+    res.redirect(`/update-truyen/${req.params.idTruyen}/chuong`);
+    // Trả về các URL đã upload
+    // res.status(200).json({ urls });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while uploading the files.');
+  }
+});
 
 module.exports = router;

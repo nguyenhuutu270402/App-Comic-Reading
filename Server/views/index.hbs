@@ -82,6 +82,12 @@
             text-decoration: none;
             color: #333;
         }
+
+        img {
+            width: 100px;
+            height: 150px;
+            object-fit: cover;
+        }
     </style>
 </head>
 
@@ -119,29 +125,30 @@
         </ul>
 
         <body>
-            <button class="btn" type="submit">Thêm</button>
+            <button onclick="them()" class="btn" type="submit">Thêm</button>
 
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Tên truyện</th>
-                        <th>Số lượt xem</th>
-                        <th>Số lượt theo dõi</th>
-                        <th>Số lượt đánh giá</th>
-                        <th>Cập nhật gần nhất</th>
-
+                        <th>Tên khác</th>
+                        <th>Tình trạng</th>
+                        <th>Image</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{#each listTruyen}}
                     <tr>
                         <td>{{id}}</td>
-                        <td class="tentruyen"><a href="/chitiet/{{id}}">{{tentruyen}}</a></td>
-                        <td>{{tongluotxem}}</td>
-                        <td>{{tongtheodoi}}</td>
-                        <td>{{tongdanhgia}}</td>
-                        <td>{{moment ngaycapnhat "HH:mm DD/MM/YYYY"}}</td>
+                        <td class="tentruyen"><a href="/update-truyen/{{id}}">{{tentruyen}}</a></td>
+                        <td><a href="/update-truyen/{{id}}">{{mota}}</a></td>
+                        <td><a href="/update-truyen/{{id}}">{{tinhtrang}}</a></td>
+                        <td>
+                            <a href="/update-truyen/{{id}}">
+                                <img src={{imagelink}} />
+                            </a>
+                        </td>
                     </tr>
                     {{/each}}
                 </tbody>
@@ -149,5 +156,8 @@
 
     </div>
     <script>
+        function them() {
+            window.location.href = "/add-truyen";
+        }
     </script>
 </body>

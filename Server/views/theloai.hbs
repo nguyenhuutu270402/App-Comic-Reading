@@ -22,7 +22,7 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
-
+            padding: 20px;
         }
 
         th {
@@ -124,8 +124,7 @@
                 <input type="text" name="keyword" placeholder="Nhập từ khóa tìm kiếm...">
                 <button type="submit">Tìm kiếm</button>
             </form> --}}
-            <button class="btn" type="submit">Thêm</button>
-
+            <button onclick="them()" class="btn" type="submit">Thêm</button>
             <table>
                 <thead>
                     <tr>
@@ -139,9 +138,8 @@
                     {{#each listTheLoai}}
                     <tr>
                         <td>{{id}}</td>
-                        <td class="tentruyen"><a href="/chitiet/{{id}}">{{tentheloai}}</a></td>
-                        <td>{{mota}}</td>
-
+                        <td><a href="update-the-loai/{{id}}">{{tentheloai}}</a></td>
+                        <td><a href="update-the-loai/{{id}}">{{mota}}</a></td>
                     </tr>
                     {{/each}}
                 </tbody>
@@ -149,5 +147,8 @@
 
     </div>
     <script>
+        function them() {
+            window.location.href = "/add-the-loai";
+        }
     </script>
 </body>
