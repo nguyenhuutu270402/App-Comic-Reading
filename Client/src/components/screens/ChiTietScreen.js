@@ -115,7 +115,7 @@ const ChiTietScreen = (props) => {
     const onFormatTinhTrang = (tinhtrang) => {
         if (tinhtrang && tinhtrang == 1) {
             return 'Đang tiến hành';
-        } else if (tinhtrang && tinhtrang == 1) {
+        } else if (tinhtrang && tinhtrang == 2) {
             return 'Hoàn thành';
         }
     }

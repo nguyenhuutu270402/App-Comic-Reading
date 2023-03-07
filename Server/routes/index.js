@@ -1,4 +1,5 @@
 var express = require('express');
+const path = require('path');
 var router = express.Router();
 var database = require('../components/database');
 const controller = require('../components/controller');
@@ -108,7 +109,6 @@ router.post('/post-update-truyen', [authentication.checkLogin, upload.single('im
     if (req.file == undefined) {
       // sửa truyen
       const { tentruyen, tenkhac, tinhtrang, mota, tacgias, theloais, id } = req.body;
-      console.log(">>>", theloais, tacgias);
       database.query(`UPDATE truyen
                   SET tentruyen = ? , tenkhac = ? , tinhtrang = ? , mota = ? 
                   WHERE id = ?`, [tentruyen, tenkhac, tinhtrang, mota, id], (err, results) => {
@@ -171,7 +171,30 @@ router.post('/post-update-truyen', [authentication.checkLogin, upload.single('im
       const [url] = await firebaseFile.getSignedUrl({ action: 'read', expires: '01-01-2500' });
 
       // sửa truyen
+
       const { tentruyen, tenkhac, tinhtrang, mota, tacgias, theloais, id } = req.body;
+      // xóa đi ảnh cũ
+      database.query(" select * from truyen WHERE id = ?", [id], (err, results) => {
+        if (err) {
+          res.status(500).json({ message: err.message });
+        } else {
+          try {
+            const fileUrl = results[0].imagelink;
+            const urlObj = new URL(fileUrl);
+            const pathname = decodeURIComponent(urlObj.pathname);
+            const filename = pathname.split('/').pop();
+            const file = bucket.file('truyen/' + filename);
+
+            file.delete().then(() => {
+            }).catch((error) => {
+              console.error('Error deleting file:', error);
+            });
+          } catch (error) {
+            console.error(error);
+          }
+
+        }
+      });
       database.query(`UPDATE truyen
       SET tentruyen = ? , tenkhac = ? , tinhtrang = ? , mota = ? , imagelink = ? 
       WHERE id = ?`, [tentruyen, tenkhac, tinhtrang, mota, url, id], (err, results) => {
@@ -234,6 +257,8 @@ router.get('/update-truyen/:idTruyen/update-chuong/:idChuong', [authentication.c
 router.post('/update-truyen/:idTruyen/post-add-chuong', upload.array('images'), async (req, res) => {
   try {
     const files = req.files;
+    files.sort((a, b) => a.originalname.localeCompare(b.originalname));
+
     // Upload các file lên Firebase Storage và trả về các URL
     const urls = await Promise.all(files.map(async (file) => {
       const bucket = firebase.storage().bucket();
@@ -253,7 +278,7 @@ router.post('/update-truyen/:idTruyen/post-add-chuong', upload.array('images'), 
       if (err) {
         res.status(500).json({ message: err.message });
       } else {
-        for (let index = urls.length - 1; index >= 0; index--) {
+        for (let index = 0; index < urls.length; index++) {
           const element = urls[index];
           database.query("INSERT INTO image_chuong (imagelink, idchuong) VALUES (?, ? )", [element, results.insertId], (err, results) => {
             if (err) {
@@ -291,6 +316,8 @@ router.post('/update-truyen/:idTruyen/post-update-chuong', upload.array('images'
     } else {
 
       const files = req.files;
+      files.sort((a, b) => a.originalname.localeCompare(b.originalname));
+
       // Upload các file lên Firebase Storage và trả về các URL
       const urls = await Promise.all(files.map(async (file) => {
         const bucket = firebase.storage().bucket();
@@ -312,15 +339,42 @@ router.post('/update-truyen/:idTruyen/post-update-chuong', upload.array('images'
         if (err) {
           res.status(500).json({ message: err.message });
         } else {
+
+          // xóa đi ảnh cũ
+          database.query(" select * from image_chuong WHERE idchuong = ?", [id], (err, results) => {
+            if (err) {
+              res.status(500).json({ message: err.message });
+            } else {
+              try {
+                for (let index = 0; index < results.length; index++) {
+                  const bucket = firebase.storage().bucket();
+                  const fileUrl = results[index].imagelink;
+                  const urlObj = new URL(fileUrl);
+                  const pathname = decodeURIComponent(urlObj.pathname);
+                  const filename = pathname.split('/').pop();
+                  const file = bucket.file('chuong/' + filename);
+                  file.delete().then(() => {
+                  }).catch((error) => {
+                    console.error('Error deleting file:', error);
+                  });
+                }
+
+              } catch (error) {
+                console.error(error);
+              }
+
+            }
+          });
+
+
           database.query("DELETE FROM image_chuong WHERE idchuong = ?", [id], (err, results) => {
             if (err) {
               res.status(500).json({ message: err.message });
             } else {
             }
           });
-          for (let index = urls.length - 1; index >= 0; index--) {
+          for (let index = 0; index < urls.length; index++) {
             const element = urls[index];
-            console.log("e>> ", element);
             database.query("INSERT INTO image_chuong (imagelink, idchuong) VALUES (?, ? )", [element, id], (err, results) => {
               if (err) {
                 res.status(500).json({ message: err.message });
