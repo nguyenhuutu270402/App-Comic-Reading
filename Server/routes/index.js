@@ -75,25 +75,47 @@ router.post('/post-add-truyen', [authentication.checkLogin, upload.single('image
       if (err) {
         res.status(500).json({ message: err.message });
       } else {
-        for (let index = 0; index < tacgias.length; index++) {
-          const element = tacgias[index];
-          database.query("INSERT INTO ct_tacgia (idtruyen, idtacgia) VALUES (? , ?)", [results.insertId, element], (err, results) => {
+        if (isNaN(tacgias) == false) {
+          database.query("INSERT INTO ct_tacgia (idtruyen, idtacgia) VALUES (? , ?)", [results.insertId, tacgias], (err, results) => {
             if (err) {
               res.status(500).json({ message: err.message });
             } else {
 
             }
           });
+        } else {
+
+          for (let index = 0; index < tacgias.length; index++) {
+            const element = tacgias[index];
+            database.query("INSERT INTO ct_tacgia (idtruyen, idtacgia) VALUES (? , ?)", [results.insertId, element], (err, results) => {
+              if (err) {
+                res.status(500).json({ message: err.message });
+              } else {
+
+              }
+            });
+          }
+
         }
-        for (let index = 0; index < theloais.length; index++) {
-          const element = theloais[index];
-          database.query("INSERT INTO ct_theloai (idtruyen, idtheloai) VALUES (? , ?)", [results.insertId, element], (err, results) => {
+        if (isNaN(theloais) == false) {
+          database.query("INSERT INTO ct_theloai (idtruyen, idtheloai) VALUES (? , ?)", [results.insertId, theloais], (err, results) => {
             if (err) {
               res.status(500).json({ message: err.message });
             } else {
 
             }
           });
+        } else {
+          for (let index = 0; index < theloais.length; index++) {
+            const element = theloais[index];
+            database.query("INSERT INTO ct_theloai (idtruyen, idtheloai) VALUES (? , ?)", [results.insertId, element], (err, results) => {
+              if (err) {
+                res.status(500).json({ message: err.message });
+              } else {
+
+              }
+            });
+          }
         }
       }
     });
@@ -109,6 +131,7 @@ router.post('/post-update-truyen', [authentication.checkLogin, upload.single('im
     if (req.file == undefined) {
       // sửa truyen
       const { tentruyen, tenkhac, tinhtrang, mota, tacgias, theloais, id } = req.body;
+
       database.query(`UPDATE truyen
                   SET tentruyen = ? , tenkhac = ? , tinhtrang = ? , mota = ? 
                   WHERE id = ?`, [tentruyen, tenkhac, tinhtrang, mota, id], (err, results) => {
@@ -130,26 +153,49 @@ router.post('/post-update-truyen', [authentication.checkLogin, upload.single('im
 
             }
           });
-          for (let index = 0; index < tacgias.length; index++) {
-            const element = tacgias[index];
-            database.query("INSERT INTO ct_tacgia (idtruyen, idtacgia) VALUES (? , ?)", [id, element], (err, results) => {
+          if (isNaN(tacgias) == false) {
+            database.query("INSERT INTO ct_tacgia (idtruyen, idtacgia) VALUES (? , ?)", [id, tacgias], (err, results) => {
               if (err) {
                 res.status(500).json({ message: err.message });
               } else {
 
               }
             });
+          } else {
+
+            for (let index = 0; index < tacgias.length; index++) {
+              const element = tacgias[index];
+              database.query("INSERT INTO ct_tacgia (idtruyen, idtacgia) VALUES (? , ?)", [id, element], (err, results) => {
+                if (err) {
+                  res.status(500).json({ message: err.message });
+                } else {
+
+                }
+              });
+            }
+
           }
-          for (let index = 0; index < theloais.length; index++) {
-            const element = theloais[index];
-            database.query("INSERT INTO ct_theloai (idtruyen, idtheloai) VALUES (? , ?)", [id, element], (err, results) => {
+          if (isNaN(theloais) == false) {
+            database.query("INSERT INTO ct_theloai (idtruyen, idtheloai) VALUES (? , ?)", [id, theloais], (err, results) => {
               if (err) {
                 res.status(500).json({ message: err.message });
               } else {
 
               }
             });
+          } else {
+            for (let index = 0; index < theloais.length; index++) {
+              const element = theloais[index];
+              database.query("INSERT INTO ct_theloai (idtruyen, idtheloai) VALUES (? , ?)", [id, element], (err, results) => {
+                if (err) {
+                  res.status(500).json({ message: err.message });
+                } else {
+
+                }
+              });
+            }
           }
+
         }
       });
     } else {
