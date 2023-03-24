@@ -3,19 +3,22 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, Dimensions, 
 import { ApiContext } from '../contexts/ApiContext';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-
+import SpinnerOverlay from 'react-native-loading-spinner-overlay';
 const TrangChuScreen = (props) => {
     const { navigation } = props;
     const { onGetTop10Truyen, onGetAllTruyen } = useContext(ApiContext);
     const [top10Truyen, setTop10Truyen] = useState([]);
     const [allTruyen, setAllTruyen] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     async function fetchData() {
         try {
+            setIsLoading(true);
             const response = await onGetTop10Truyen();
             const response2 = await onGetAllTruyen();
             setAllTruyen(response2.results);
             setTop10Truyen(response.results);
+            setIsLoading(false);
         } catch (error) {
             console.error(error);
         }
@@ -109,9 +112,7 @@ const TrangChuScreen = (props) => {
         setRefreshing(true);
         // Fetch your data here and then set refreshing to false
         fetchData();
-        setTimeout(() => {
-            setRefreshing(false);
-        }, 2000);
+        setRefreshing(false);
     };
     return (
 
@@ -136,6 +137,12 @@ const TrangChuScreen = (props) => {
                 refreshControl={
                     < RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                 }
+            />
+            <SpinnerOverlay
+                visible={isLoading}
+                textStyle={{ color: '#FFF' }}
+                animation="fade"
+                color="#000"
             />
         </View>
 

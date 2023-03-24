@@ -7,7 +7,7 @@ import { ApiContext } from '../contexts/ApiContext';
 import { Modal } from 'react-native-paper';
 import { Ionicons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo, Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import SpinnerOverlay from 'react-native-loading-spinner-overlay';
 
 
 const ChiTietChuongScreen = (props) => {
@@ -33,10 +33,11 @@ const ChiTietChuongScreen = (props) => {
     const [tongBinhLuan, setTongBinhLuan] = useState(0);
     const [listBinhLuan, setListBinhLuan] = useState([]);
     const [noiDungBinhLuan, setNoiDungBinhLuan] = useState('');
-
+    const [isLoading, setIsLoading] = useState(false);
 
     async function fetchData() {
         try {
+            setIsLoading(true);
             const response1 = await onGetListImageChuongByIdChuong(id);
             const response2 = await onGetOneChuongById(id);
             setListImage(response1.results);
@@ -73,6 +74,7 @@ const ChiTietChuongScreen = (props) => {
                 console.log(errorMsg);
             });
             setSelectedValue(id);
+            setIsLoading(false);
         } catch (error) {
             console.log(error);
 
@@ -161,12 +163,13 @@ const ChiTietChuongScreen = (props) => {
             ToastAndroid.show('Đăng nhập để sử dụng chức năng này', ToastAndroid.CENTER);
             return;
         }
+        setIsLoading(true);
         const response = await onDeleteTheoDoi(nguoidung.id, oneChuong.idtruyen);
         if (response.results) {
             setKiemTraTheoDoi(false);
             ToastAndroid.show('Bỏ theo dõi thành công', ToastAndroid.CENTER);
         }
-
+        setIsLoading(false);
     }
 
     const addTheoDoi = async () => {
@@ -174,10 +177,11 @@ const ChiTietChuongScreen = (props) => {
             ToastAndroid.show('Đăng nhập để sử dụng chức năng này', ToastAndroid.CENTER);
             return;
         }
+        setIsLoading(true);
         const response = await onAddTheoDoi(nguoidung.id, oneChuong.idtruyen);
         setKiemTraTheoDoi(true);
         ToastAndroid.show('Theo dõi thành công', ToastAndroid.CENTER);
-
+        setIsLoading(false);
     }
 
     const onBinhLuan = async () => {
@@ -195,7 +199,7 @@ const ChiTietChuongScreen = (props) => {
     const addBinhLuan = async () => {
         if (noiDungBinhLuan.length > 0) {
             let date = new Date();
-
+            setIsLoading(true);
             await onAddBinhLuan(nguoidung.id, oneChuong.idtruyen, noiDungBinhLuan, date);
             setNoiDungBinhLuan('');
             ToastAndroid.show('Bình luận thành công', ToastAndroid.CENTER);
@@ -204,6 +208,7 @@ const ChiTietChuongScreen = (props) => {
             setTongBinhLuan(response4.results);
             const response5 = await onGetListBinhLuanByIdTruyen(oneChuong.idtruyen);
             setListBinhLuan(response5.results);
+            setIsLoading(false);
             return;
         } else {
             ToastAndroid.show('Chưa có dòng chữ nào :(', ToastAndroid.CENTER);
@@ -405,7 +410,12 @@ const ChiTietChuongScreen = (props) => {
                 </View>
 
             </Modal>
-
+            <SpinnerOverlay
+                visible={isLoading}
+                textStyle={{ color: '#FFF' }}
+                animation="fade"
+                color="#000"
+            />
         </View>
     )
 }

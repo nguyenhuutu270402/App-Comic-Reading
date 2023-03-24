@@ -4,6 +4,7 @@ import { Modal } from 'react-native-paper';
 import { ApiContext } from '../contexts/ApiContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, MaterialCommunityIcons, EvilIcons, FontAwesome, AntDesign, Fontisto, Entypo } from '@expo/vector-icons';
+import SpinnerOverlay from 'react-native-loading-spinner-overlay';
 const ChiTietScreen = (props) => {
     const { navigation, route: { params: { id } } } = props;
     const { onGetOneTruyenById, onGetListChuongByIdTruyen,
@@ -23,10 +24,11 @@ const ChiTietScreen = (props) => {
     const [nguoidung, setNguoidung] = useState({});
     const [isLogin, setIsLogin] = useState(false);
     const [isRefresh, setIsRefresh] = useState(false);
-
+    const [isLoading, setIsLoading] = useState(false);
 
     async function fetchData() {
         try {
+            setIsLoading(true);
             AsyncStorage.getItem('nguoidung')
                 .then(async value => {
                     const myObject = JSON.parse(value);
@@ -53,6 +55,7 @@ const ChiTietScreen = (props) => {
             const response4 = await onGetListTacGiaByIdTruyen(id);
             setListTheLoaiByIdTruyen(response3.results);
             setListTacGiaByIdTruyen(response4.results);
+            setIsLoading(false);
         } catch (error) {
             console.error(error);
         }
@@ -399,7 +402,12 @@ const ChiTietScreen = (props) => {
                 </View>
             </Modal>
 
-
+            <SpinnerOverlay
+                visible={isLoading}
+                textStyle={{ color: '#FFF' }}
+                animation="fade"
+                color="#000"
+            />
         </View>
 
     );
